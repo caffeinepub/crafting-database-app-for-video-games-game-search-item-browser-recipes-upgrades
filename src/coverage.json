@@ -1,63 +1,58 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T22:59:55.088Z",
+  "generatedAt": "2026-02-08T23:37:34.135Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
+        "id": "REQ-1",
+        "summary": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/backend.d.ts",
-          "frontend/src/hooks/useQueries.ts",
+          "frontend/public/assets/generated/app-logo.dim_512x512.png",
+          "frontend/public/assets/generated/hero-banner.dim_1600x900.png",
+          "frontend/src/components/layout/Header.tsx",
           "frontend/src/pages/GameSearchPage.tsx",
-          "frontend/src/pages/GameDetailPage.tsx"
+          "frontend/index.html"
         ],
         "matchedFiles": [
-          "frontend/src/backend.d.ts",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/GameSearchPage.tsx",
-          "frontend/src/pages/GameDetailPage.tsx"
+          "frontend/index.html"
         ]
       },
       {
-        "id": "REQ-8",
-        "summary": "Extend the backend data model and query API to support a standalone, internet-sourced \"video game library\" (game discovery catalog) that is not limited to games that already have crafting/item data. Provide query methods to (a) list the library games and (b) fetch a library game by id so the frontend can display and navigate a large catalog.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual \"refresh/import\" operation that fetches from those sources, validates the payload, upserts the library entries into persistent storage, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message on failure).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "id": "REQ-2",
+        "summary": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useProductionPreflight.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useActor.ts",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useProductionPreflight.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/hooks/useProductionPreflight.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/GameDetailPage.tsx",
-    "frontend/src/pages/GameSearchPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

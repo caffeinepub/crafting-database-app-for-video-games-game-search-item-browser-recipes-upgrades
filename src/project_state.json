@@ -1,59 +1,26 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
-  "summary": "Application for crafting-focused video games: users can search/select a game from an internet-sourced library and browse all craftable/buildable items (food, tools, buildings) with required supplies, upgrades, and values, kept up-to-date via internet-sourced updates.",
+  "projectStateVersion": 3,
+  "summary": "Project focused on deploying an app through draft and production release stages.",
   "architectural_notes": [
-    "Needs an external data ingestion/update mechanism (e.g., APIs, scraping, or community datasets) to keep crafting data current; define update frequency and data source strategy.",
-    "Define a data source strategy for acquiring/refreshing the global video game catalog (e.g., external API vs curated/community dataset), including deduping, identifiers, and update cadence."
+    "Establish a release workflow with at least two environments/stages: Draft (review) and Production (live)."
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-data-update-mechanism-that-can-incorporate-crafting-database-updates-from-the-internet-allow-each-game-to-have-one-or-more-configurable-remote-data-sources-https-url-endpoints-returning-json-implement-backend-functions-to-a-fetch-and-validate-remote-data-b-upsert-it-into-stored-game-item-data-and-c-record-per-game-lastupdated-timestamp-and-update-status-success-failure-message-provide-a-manual-refresh-data-action-callable-from-the-frontend-to-trigger-an-update-for-a-selected-game",
-      "title": "Add a data update mechanism that can incorporate crafting database updates “from the internet”: allow each game to have one or more configurable remote data sources (HTTPS URL endpoints returning JSON). Implement backend functions to (a) fetch and validate remote data, (b) upsert it into stored game/item data, and (c) record per-game lastUpdated timestamp and update status (success/failure + message). Provide a manual “Refresh data” action callable from the frontend to trigger an update for a selected game.",
+      "id": "feature-promote-the-currently-deployed-draft-release-draft-version-2-to-the-production-environment-so-the-production-deployment-serves-the-same-app-functionality-as-the-reviewed-draft",
+      "title": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
       "reqIds": [
-        "REQ-3"
+        "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-build-the-frontend-ux-to-look-up-and-select-a-game-then-browse-that-game-s-crafting-database-a-game-search-list-page-a-game-detail-page-with-category-tabs-filters-food-tools-buildings-other-an-item-list-with-search-and-an-item-detail-view-showing-required-supplies-possible-upgrades-and-values-in-a-clear-scannable-layout",
-      "title": "Build the frontend UX to look up and select a game, then browse that game’s crafting database: a game search/list page; a game detail page with category tabs/filters (Food/Tools/Buildings/Other); an item list with search; and an item detail view showing required supplies, possible upgrades, and values in a clear, scannable layout.",
+      "id": "feature-run-a-pre-production-verification-pass-covering-backend-canister-availability-and-frontend-api-connectivity-to-ensure-the-production-frontend-can-query-the-motoko-actor-methods-used-by-the-ui-e-g-getcataloggames-getcataloggame-getgames-getgame-getitems-getitem-getitemsbycategory-getupdatestatus",
+      "title": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
       "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-use-react-query-for-all-backend-data-fetching-and-cache-invalidation-ensure-refresh-update-operations-invalidate-the-relevant-queries-game-metadata-item-lists-item-details-so-the-ui-stays-consistent",
-      "title": "Use React Query for all backend data fetching and cache invalidation. Ensure refresh/update operations invalidate the relevant queries (game metadata, item lists, item details) so the UI stays consistent.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-establish-a-coherent-visual-theme-for-the-app-and-apply-it-consistently-across-pages-typography-spacing-components-and-colors-theme-direction-workshop-ledger-warm-neutrals-paper-like-surfaces-subtle-grid-ruled-accents-and-crafting-inspired-iconography-avoid-blue-purple-as-primary-brand-colors",
-      "title": "Establish a coherent visual theme for the app and apply it consistently across pages (typography, spacing, components, and colors). Theme direction: ‘Workshop ledger’—warm neutrals, paper-like surfaces, subtle grid/ruled accents, and crafting-inspired iconography. Avoid blue/purple as primary brand colors.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-generated-static-image-assets-to-support-the-theme-and-reference-them-in-the-ui-store-in-frontend-public-assets-generated-include-an-app-logo-and-a-subtle-hero-banner-illustration",
-      "title": "Add generated static image assets to support the theme and reference them in the UI (store in frontend/public/assets/generated). Include: an app logo and a subtle hero/banner illustration.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-frontend-game-discovery-ux-to-browse-the-full-internet-imported-video-game-library-show-the-library-games-on-the-search-list-page-add-a-user-action-to-trigger-a-library-refresh-import-and-display-the-library-update-status-in-progress-last-updated-error-ensure-react-query-cache-invalidation-keeps-the-list-consistent-after-refresh",
-      "title": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
-      "reqIds": [
-        "REQ-10"
+        "REQ-2"
       ],
       "version": 1
     }
@@ -61,69 +28,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Game lookup/search to select a crafting-based video game and view its crafting database",
+      "summary": "Support deploying a draft build/version for review",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "For a selected game, list all buildable/craftable objects (e.g., food, tools, buildings)",
+      "summary": "Support promoting/deploying the reviewed draft to production",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Show per-item details: required supplies/materials, possible upgrades, and item values",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Automatically track and incorporate crafting data updates from the internet (keep game data current)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Create a core data model for crafting-focused video games that supports: (1) games, (2) craftable/buildable objects (food, tools, buildings, etc.), (3) per-object required supplies/materials with quantities, (4) per-object possible upgrades (upgrade paths/levels and their added/changed requirements), and (5) per-object values (e.g., sell value, durability, stats, or other numeric/string value fields). Persist this data in the Motoko backend so it can be queried by the frontend.",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Implement backend query APIs to support the app’s primary flows: list/search games; fetch a game by id; list/search/filter craftable items for a selected game (by name and category); fetch craftable item details by id including supplies, upgrades, and values.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Use internet-sourced data to populate a full library/catalog of video games (not just crafting data for selected games) for game discovery/selection",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Extend the backend data model and query API to support a standalone, internet-sourced \"video game library\" (game discovery catalog) that is not limited to games that already have crafting/item data. Provide query methods to (a) list the library games and (b) fetch a library game by id so the frontend can display and navigate a large catalog.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual \"refresh/import\" operation that fetches from those sources, validates the payload, upserts the library entries into persistent storage, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message on failure).",
-      "reqIds": [
-        "REQ-9"
-      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Crafting Database App for Video Games (Game Search, Item Browser, Recipes, Upgrades, Web Updates)",
+  "projectName": "Promote the currently deployed draft to production",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

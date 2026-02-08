@@ -1,37 +1,72 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Frontend game discovery for internet-imported video game library",
+  "title": "Production promotion readiness (frontend)",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Update game discovery pages and query hooks to browse the internet-imported library, trigger manual refresh/import, show library update status, and handle games without crafting data gracefully.",
+      "id": "REQ-1",
+      "summary": "Align the frontend build and static assets with the reviewed draft (Draft Version 2) so production serves the same app behavior without draft-only messaging.",
       "acceptanceCriteria": [
-        "Game search/list UI displays games from the new video game library queries (not only crafting-enabled games).",
-        "The page includes a clearly labeled control (English) to manually refresh/import the library and shows status feedback (in progress, last updated timestamp, and error message on failure).",
-        "After a successful refresh, the game list updates without a full page reload (React Query invalidates/refetches the relevant queries).",
-        "Selecting a game that does not yet have crafting data does not crash the UI; the game detail experience shows an appropriate English empty-state message indicating crafting data is not available for that game."
+        "A production deployment is created from the current draft (Draft Version 2).",
+        "The production app loads successfully and core flows work: game search/list, game detail, item detail pages render without runtime errors.",
+        "Production deployment does not show draft-only messaging or review-only banners (if any exist)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Extend the typed frontend actor interface to include the new video game library capabilities required by the UI: a stable LibraryGame type (at minimum id/name/description), functions to list library games and fetch a library game by id, functions to trigger a library refresh/import and read global library update status. Keep existing crafting-focused types and functions intact."
+          "path": "frontend/public/assets/generated/app-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated app logo asset to the production-served static assets at frontend/public/assets/generated/app-logo.dim_512x512.png so the Header renders correctly in production."
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/public/assets/generated/hero-banner.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated hero banner asset to the production-served static assets at frontend/public/assets/generated/hero-banner.dim_1600x900.png so the Game Search hero background renders correctly in production."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
           "operation": "modify",
-          "description": "Add React Query hooks and queryKeys for the new library game list/detail and global library update status, plus a refresh/import mutation that invalidates/refetches the relevant queries on success. Ensure query keys are distinct from existing crafting-focused queries and that invalidation updates the list without a full reload."
+          "description": "Verify the production build serves the logo from frontend/public/assets/generated/app-logo.dim_512x512.png and that no draft/review-only banner text is rendered in the header area. (shadcn-ui is already used via existing UI components; do not modify immutable ui component files.)"
         },
         {
           "path": "frontend/src/pages/GameSearchPage.tsx",
           "operation": "modify",
-          "description": "Switch the search/list page to load and display the internet-imported library games (instead of only crafting-enabled games). Add a clearly labeled English control to trigger library refresh/import and render global library update status (in progress / last updated / error message). Use existing shadcn/ui components (e.g., Card, Button, Badge, Alert, Skeleton) for the new UI elements; verify the component's usage instructions before implementing."
+          "description": "Verify the production build serves the hero image from frontend/public/assets/generated/hero-banner.dim_1600x900.png and that no draft/review-only messaging is shown on the main browsing page."
         },
         {
-          "path": "frontend/src/pages/GameDetailPage.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Update the game detail page to fetch and display the selected library game’s basic info and to avoid crashing when crafting data is missing. When crafting data/items are unavailable for the selected library game, show an English empty-state message indicating crafting data is not available for that game, and avoid running item queries that would error. Use the existing EmptyState component and existing shadcn/ui components for consistent presentation; verify the component's usage instructions before implementing."
+          "description": "Audit and ensure there is no draft-only/review-only copy in the document title/metadata, and keep production-friendly branding only (no functional UI changes)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add a lightweight frontend pre-production verification pass to confirm backend connectivity and basic route navigation without uncaught exceptions in production.",
+      "acceptanceCriteria": [
+        "From the production frontend, queries for catalog games and crafting games return successfully (or return empty lists without errors if no data exists).",
+        "Navigating between routes '/', '/game/$gameId', and '/game/$gameId/item/$itemId' works in production without broken links or blank screens.",
+        "No uncaught exceptions occur in the browser console during basic navigation and data loading."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useProductionPreflight.ts",
+          "operation": "create",
+          "description": "Create a small hook that, on initial app load, performs safe actor connectivity checks by calling the same actor methods used by the UI (getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus) with defensive try/catch and non-blocking behavior; log failures in a structured way without changing UX."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the preflight hook into the app lifecycle so it runs once on startup (and does not create new routes/pages). Ensure it does not introduce runtime errors or visible draft/review banners."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Harden actor creation and query invalidation against transient production network issues (e.g., ensure errors are contained and do not cascade into uncaught exceptions during navigation). Use the existing core-infrastructure backend connection configuration where applicable; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add defensive handling to queries so production navigation cannot result in uncaught exceptions when data is missing or actor calls fail; keep behavior as empty-list/nullable returns consistent with current UI expectations."
         }
       ]
     }

@@ -22,7 +22,13 @@ export function useGetGames() {
     queryKey: queryKeys.games,
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getGames();
+      try {
+        const result = await actor.getGames();
+        return result || [];
+      } catch (error) {
+        console.error('[useGetGames] Error fetching games:', error);
+        return [];
+      }
     },
     enabled: !!actor && !isFetching,
   });
@@ -36,7 +42,13 @@ export function useGetGame(gameId: string) {
     queryKey: queryKeys.game(gameId),
     queryFn: async () => {
       if (!actor) return null;
-      return actor.getGame(gameId);
+      try {
+        const result = await actor.getGame(gameId);
+        return result || null;
+      } catch (error) {
+        console.error(`[useGetGame] Error fetching game ${gameId}:`, error);
+        return null;
+      }
     },
     enabled: !!actor && !isFetching && !!gameId,
   });
@@ -50,7 +62,13 @@ export function useGetCatalogGames() {
     queryKey: queryKeys.catalogGames,
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getCatalogGames();
+      try {
+        const result = await actor.getCatalogGames();
+        return result || [];
+      } catch (error) {
+        console.error('[useGetCatalogGames] Error fetching catalog games:', error);
+        return [];
+      }
     },
     enabled: !!actor && !isFetching,
   });
@@ -64,7 +82,13 @@ export function useGetCatalogGame(gameId: string) {
     queryKey: queryKeys.catalogGame(gameId),
     queryFn: async () => {
       if (!actor) return null;
-      return actor.getCatalogGame(gameId);
+      try {
+        const result = await actor.getCatalogGame(gameId);
+        return result || null;
+      } catch (error) {
+        console.error(`[useGetCatalogGame] Error fetching catalog game ${gameId}:`, error);
+        return null;
+      }
     },
     enabled: !!actor && !isFetching && !!gameId,
   });
@@ -78,7 +102,13 @@ export function useGetItems(gameId: string) {
     queryKey: queryKeys.items(gameId),
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getItems(gameId);
+      try {
+        const result = await actor.getItems(gameId);
+        return result || [];
+      } catch (error) {
+        console.error(`[useGetItems] Error fetching items for game ${gameId}:`, error);
+        return [];
+      }
     },
     enabled: !!actor && !isFetching && !!gameId,
   });
@@ -92,10 +122,17 @@ export function useGetItemsByCategory(gameId: string, category: ItemCategory | n
     queryKey: category ? queryKeys.itemsByCategory(gameId, category) : queryKeys.items(gameId),
     queryFn: async () => {
       if (!actor) return [];
-      if (!category) {
-        return actor.getItems(gameId);
+      try {
+        if (!category) {
+          const result = await actor.getItems(gameId);
+          return result || [];
+        }
+        const result = await actor.getItemsByCategory(gameId, category);
+        return result || [];
+      } catch (error) {
+        console.error(`[useGetItemsByCategory] Error fetching items for game ${gameId}, category ${category}:`, error);
+        return [];
       }
-      return actor.getItemsByCategory(gameId, category);
     },
     enabled: !!actor && !isFetching && !!gameId,
   });
@@ -109,7 +146,13 @@ export function useGetItem(gameId: string, itemId: string) {
     queryKey: queryKeys.item(gameId, itemId),
     queryFn: async () => {
       if (!actor) return null;
-      return actor.getItem(gameId, itemId);
+      try {
+        const result = await actor.getItem(gameId, itemId);
+        return result || null;
+      } catch (error) {
+        console.error(`[useGetItem] Error fetching item ${itemId} for game ${gameId}:`, error);
+        return null;
+      }
     },
     enabled: !!actor && !isFetching && !!gameId && !!itemId,
   });
@@ -123,7 +166,13 @@ export function useGetUpdateStatus(gameId: string) {
     queryKey: queryKeys.updateStatus(gameId),
     queryFn: async () => {
       if (!actor) return null;
-      return actor.getUpdateStatus(gameId);
+      try {
+        const result = await actor.getUpdateStatus(gameId);
+        return result || null;
+      } catch (error) {
+        console.error(`[useGetUpdateStatus] Error fetching update status for game ${gameId}:`, error);
+        return null;
+      }
     },
     enabled: !!actor && !isFetching && !!gameId,
   });

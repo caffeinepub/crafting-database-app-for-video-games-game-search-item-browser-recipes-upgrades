@@ -1,53 +1,59 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T22:59:55.086Z",
-  "summary": "Backend adds a new persistent CatalogGame map with queries to list/fetch catalog games and adds a state migration. Frontend adds React Query hooks for catalog queries and updates search/detail pages to use catalog games and to handle missing crafting data more gracefully. However, there is no diff evidence of the required remote source configuration + import/refresh mechanism or the frontend refresh/status UI and cache invalidation after refresh.",
+  "generatedAt": "2026-02-08T23:37:34.133Z",
+  "summary": "REQ-2 appears implemented via a new non-blocking frontend preflight hook that calls the specified backend actor methods and via more defensive query hooks. REQ-1 (actual promotion of Draft Version 2 to production) is not evidenced by any deployment/release configuration changes in the provided diff summary.",
   "missing_requirements": [
     {
-      "id": "REQ-9",
-      "requirement": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual refresh/import operation that fetches, validates, upserts, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message).",
-      "reason": "Diff shows CatalogGame storage and queries, but no evidence of (a) set/get of library RemoteDataSource list, (b) an import/refresh function that performs HTTPS JSON fetching/validation/upsert, or (c) a library-level update status query/state. Only crafting-game update status methods are visible (getUpdateStatus(gameId)), and catalogGames appears to be populated only via a manual addCatalogGame function.",
+      "id": "REQ-1",
+      "requirement": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+      "reason": "The diff shows frontend/runtime robustness and connectivity checks, but no evidence of any release/promotion mechanism (e.g., environment config, canister IDs for production, deployment pipeline/scripts, version promotion metadata) that would actually create a production deployment from the current draft.",
       "evidence": [
+        "frontend/src/hooks/useProductionPreflight.ts",
+        "frontend/src/App.tsx",
         "backend/main.mo",
-        "frontend/src/hooks/useQueries.ts"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "requirement": "Add a user action to trigger a library refresh/import, display the library update status (in progress / last updated / error), and ensure React Query invalidation/refetch updates the list after refresh.",
-      "reason": "Diff shows only catalog list/detail queries (useGetCatalogGames/useGetCatalogGame). There is no evidence of a refresh/import button/control, no hooks/mutations for triggering refresh, no display of library update status, and no query invalidation tied to a catalog refresh.",
-      "evidence": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/GameSearchPage.tsx",
-        "frontend/src/pages/GameDetailPage.tsx"
+        "project_state.json"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Backend shared method addCatalogGame for directly inserting catalog games.",
-      "reason": "BuildRequest specifies internet-sourced import via configured remote HTTPS JSON sources and a manual refresh/import operation, but does not request a direct 'add catalog game' API for manual insertion.",
+      "description": "Workshop-ledger styling/theme changes (global palette, textures, Tailwind tokens/fonts).",
+      "reason": "BuildRequest explicitly lists as a non-goal changing UI/UX beyond what is required for production promotion; these styling/theme changes are not requested by REQ-1/REQ-2.",
       "evidence": [
-        "backend/main.mo"
+        "frontend-file-summaries.txt (mentions frontend/src/index.css and frontend/tailwind.config.js changes)"
       ]
     },
     {
-      "description": "Game search page hero banner/marketing copy (e.g., 'Explore a comprehensive collection of video games from around the world') and use of a static hero image asset path.",
-      "reason": "REQ-10 asks to browse the imported library, refresh/import, and show status. The additional hero/branding content is not requested (though it may be acceptable UX enhancement).",
+      "description": "Header/Footer content changes and attribution link updates.",
+      "reason": "Not requested by REQ-1/REQ-2 and constitutes UI/UX/content changes beyond production promotion/verification.",
       "evidence": [
-        "frontend/src/pages/GameSearchPage.tsx"
+        "frontend-file-summaries.txt (mentions frontend/src/components/layout/Header.tsx and Footer.tsx)"
+      ]
+    },
+    {
+      "description": "New/expanded empty state UI components.",
+      "reason": "Not requested; introduces/changes UI components beyond production promotion/verification.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions frontend/src/components/ui/EmptyState.tsx and frontend/src/components/EmptyState.tsx)"
+      ]
+    },
+    {
+      "description": "GameDetailPage/ItemDetailPage content expansions (displaying comprehensive item info, upgrades, informational messages when crafting data unavailable).",
+      "reason": "REQ-1/REQ-2 focus on promoting a reviewed draft and verifying connectivity/navigation; these page-level feature/content changes are not explicitly requested and may be considered new functionality/UI behavior changes.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions frontend/src/pages/GameDetailPage.tsx and frontend/src/pages/ItemDetailPage.tsx)"
       ]
     }
   ],
-  "confidence": 0.78,
+  "confidence": 0.62,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/hooks/useProductionPreflight.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/GameDetailPage.tsx",
-    "frontend/src/pages/GameSearchPage.tsx",
     "project_state.json"
   ]
 }

@@ -1,6 +1,6 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining routes for game search, game detail, and item detail pages, wrapped with ThemeProvider and Toaster for notifications.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations including catalog games (library), crafting games, items, and update status with proper query key management and invalidation.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup and production preflight hook integrated into the Layout component for backend connectivity verification on app initialization.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations with defensive error handling that returns empty arrays/null values instead of throwing exceptions, ensuring production navigation remains stable.",
   "frontend/src/components/layout/Header.tsx": "Sticky header component displaying the app logo, title, and home navigation button with workshop-ledger styling.",
   "frontend/src/components/layout/Footer.tsx": "Footer component with copyright notice and caffeine.ai attribution link with heart icon.",
   "frontend/src/components/ui/EmptyState.tsx": "Reusable empty state component for displaying \"no results\" messages with customizable title, description, and icon.",
@@ -9,5 +9,8 @@
   "frontend/src/pages/ItemDetailPage.tsx": "Item detail page displaying comprehensive information including required materials, item properties (sell value, durability, stats), and available upgrades with their requirements.",
   "frontend/src/index.css": "Global styles with warm workshop-ledger color palette using OKLCH colors, featuring paper-like surfaces, sepia/brown tones, and subtle ruled-line texture effect.",
   "frontend/tailwind.config.js": "Tailwind configuration extended with custom fonts (Inter, Merriweather, JetBrains Mono), paper shadow utility, and workshop-themed design tokens.",
-  "frontend/src/components/EmptyState.tsx": "Reusable empty state component for displaying \"no results\" messages with customizable title, description, and icon."
+  "frontend/src/components/EmptyState.tsx": "Reusable empty state component for displaying \"no results\" messages with customizable title, description, and icon.",
+  "frontend/src/hooks/useProductionPreflight.ts": "Production preflight hook that performs non-blocking backend connectivity checks on initial app load, testing all actor methods and logging structured diagnostics without affecting UX.",
+  "frontend/src/hooks/useActor.ts": "Hardened actor initialization hook with enhanced error handling, retry logic, and fallback to anonymous actor to prevent uncaught exceptions during production network issues.",
+  "frontend/index.html": "HTML entry point with production-friendly title \"Crafting Compendium - Video Game Crafting Database\" without draft-only messaging."
 }

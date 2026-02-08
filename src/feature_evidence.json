@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-frontend-game-discovery-ux-to-browse-the-full-internet-imported-video-game-library-show-the-library-games-on-the-search-list-page-add-a-user-action-to-trigger-a-library-refresh-import-and-display-the-library-update-status-in-progress-last-updated-error-ensure-react-query-cache-invalidation-keeps-the-list-consistent-after-refresh",
-      "featureTitle": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
+      "featureId": "feature-promote-the-currently-deployed-draft-release-draft-version-2-to-the-production-environment-so-the-production-deployment-serves-the-same-app-functionality-as-the-reviewed-draft",
+      "featureTitle": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/GameDetailPage.tsx",
-        "frontend/src/pages/GameSearchPage.tsx"
+        "frontend/index.html"
       ],
       "components": [
         "http-outcalls@3.0.0",
@@ -18,7 +16,28 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-run-a-pre-production-verification-pass-covering-backend-canister-availability-and-frontend-api-connectivity-to-ensure-the-production-frontend-can-query-the-motoko-actor-methods-used-by-the-ui-e-g-getcataloggames-getcataloggame-getgames-getgame-getitems-getitem-getitemsbycategory-getupdatestatus",
+      "featureTitle": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useProductionPreflight.ts",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "http-outcalls@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

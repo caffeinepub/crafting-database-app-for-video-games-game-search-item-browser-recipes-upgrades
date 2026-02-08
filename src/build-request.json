@@ -1,74 +1,52 @@
 {
   "kind": "build_request",
-  "title": "Import an internet-sourced full video game library for game discovery",
+  "title": "Promote the currently deployed draft to production",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-8",
-      "text": "Extend the backend data model and query API to support a standalone, internet-sourced \"video game library\" (game discovery catalog) that is not limited to games that already have crafting/item data. Provide query methods to (a) list the library games and (b) fetch a library game by id so the frontend can display and navigate a large catalog.",
-      "target": "backend",
+      "id": "REQ-1",
+      "text": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Use the internet to get a full library of video games"
+          "Proceed to production"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes a stable type for a library game entry (at minimum: id, name, description; additional metadata fields are optional).",
-        "Backend provides a query to list library games (paged or unpaged) and a query to fetch a library game by id.",
-        "The existing crafting-focused queries (getGames/getGame/getItems/etc.) continue to work unchanged for games that have crafting data."
+        "A production deployment is created from the current draft (Draft Version 2).",
+        "The production app loads successfully and core flows work: game search/list, game detail, item detail pages render without runtime errors.",
+        "Production deployment does not show draft-only messaging or review-only banners (if any exist)."
       ]
     },
     {
-      "id": "REQ-9",
-      "text": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual \"refresh/import\" operation that fetches from those sources, validates the payload, upserts the library entries into persistent storage, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message on failure).",
-      "target": "backend",
+      "id": "REQ-2",
+      "text": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Use the internet to get a full library of video games"
+          "Proceed to production"
         ]
       },
       "acceptanceCriteria": [
-        "Backend provides methods to set/get the video game library remote data sources (using the existing RemoteDataSource shape: id/url/description).",
-        "Backend provides a method to trigger a library refresh/import and a query to read the current library update status (including lastUpdated and any failure message).",
-        "If a refresh fails due to invalid JSON or validation issues, the status is set to failed with a readable English error message and previously imported library entries remain available.",
-        "Refreshing the library upserts entries by id (existing entries update; new entries insert) without creating duplicates."
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Use the internet to get a full library of video games"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Game search/list UI displays games from the new video game library queries (not only crafting-enabled games).",
-        "The page includes a clearly labeled control (English) to manually refresh/import the library and shows status feedback (in progress, last updated timestamp, and error message on failure).",
-        "After a successful refresh, the game list updates without a full page reload (React Query invalidates/refetches the relevant queries).",
-        "Selecting a game that does not yet have crafting data does not crash the UI; the game detail experience shows an appropriate English empty-state message indicating crafting data is not available for that game."
+        "From the production frontend, queries for catalog games and crafting games return successfully (or return empty lists without errors if no data exists).",
+        "Navigating between routes '/', '/game/$gameId', and '/game/$gameId/item/$itemId' works in production without broken links or blank screens.",
+        "No uncaught exceptions occur in the browser console during basic navigation and data loading."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo; add backend/migration.mo only if state schema changes require a conditional migration.",
-    "Do not edit frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Use English for any user-facing text."
+    "Do not edit files under frontend/src/components/ui or other paths listed as immutable in SYSTEM_CONTEXT.",
+    "Keep all Motoko logic within the single main actor (backend/main.mo); do not introduce additional backend services."
   ],
   "nonGoals": [
-    "Integrating a specific third-party game database provider (no provider-specific API keys/auth flows unless the user supplies them).",
-    "Guaranteeing a literally complete global list of all video games from all platforms; implement a configurable import mechanism and display whatever the configured sources provide.",
-    "Real-time updates/push; updates remain manual (and/or whatever already exists), not websocket-driven."
+    "Adding new app features or changing the existing UI/UX beyond what is required for a production promotion.",
+    "Changing backend data schemas or adding migrations unless required to complete the production promotion."
   ],
   "imageRequirements": {
     "required": [],

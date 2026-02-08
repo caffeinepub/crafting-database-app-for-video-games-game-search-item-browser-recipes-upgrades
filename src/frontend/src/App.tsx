@@ -6,9 +6,13 @@ import Footer from './components/layout/Footer';
 import GameSearchPage from './pages/GameSearchPage';
 import GameDetailPage from './pages/GameDetailPage';
 import ItemDetailPage from './pages/ItemDetailPage';
+import { useProductionPreflight } from './hooks/useProductionPreflight';
 
 // Layout component with Header and Footer
 function Layout({ children }: { children: React.ReactNode }) {
+  // Run production preflight checks on app initialization
+  useProductionPreflight();
+  
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
