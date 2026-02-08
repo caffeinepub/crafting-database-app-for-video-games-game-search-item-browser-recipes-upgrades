@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Application for crafting-focused video games: users can search/select a game and browse all craftable/buildable items (food, tools, buildings) with required supplies, upgrades, and values, kept up-to-date via internet-sourced updates.",
+  "projectStateVersion": 5,
+  "summary": "Application for crafting-focused video games: users can search/select a game from an internet-sourced library and browse all craftable/buildable items (food, tools, buildings) with required supplies, upgrades, and values, kept up-to-date via internet-sourced updates.",
   "architectural_notes": [
-    "Needs an external data ingestion/update mechanism (e.g., APIs, scraping, or community datasets) to keep crafting data current; define update frequency and data source strategy."
+    "Needs an external data ingestion/update mechanism (e.g., APIs, scraping, or community datasets) to keep crafting data current; define update frequency and data source strategy.",
+    "Define a data source strategy for acquiring/refreshing the global video game catalog (e.g., external API vs curated/community dataset), including deduping, identifiers, and update cadence."
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- App logo, workshop-ledger style, simple emblem (app-logo.dim_512x512.png)\n- Wide banner illustration, cozy crafting bench with parchment/ledger aesthetic (hero-banner.dim_1600x900.png)",
   "existing_features": [
     {
       "id": "feature-add-a-data-update-mechanism-that-can-incorporate-crafting-database-updates-from-the-internet-allow-each-game-to-have-one-or-more-configurable-remote-data-sources-https-url-endpoints-returning-json-implement-backend-functions-to-a-fetch-and-validate-remote-data-b-upsert-it-into-stored-game-item-data-and-c-record-per-game-lastupdated-timestamp-and-update-status-success-failure-message-provide-a-manual-refresh-data-action-callable-from-the-frontend-to-trigger-an-update-for-a-selected-game",
@@ -46,6 +46,14 @@
       "title": "Add generated static image assets to support the theme and reference them in the UI (store in frontend/public/assets/generated). Include: an app logo and a subtle hero/banner illustration.",
       "reqIds": [
         "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-game-discovery-ux-to-browse-the-full-internet-imported-video-game-library-show-the-library-games-on-the-search-list-page-add-a-user-action-to-trigger-a-library-refresh-import-and-display-the-library-update-status-in-progress-last-updated-error-ensure-react-query-cache-invalidation-keeps-the-list-consistent-after-refresh",
+      "title": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
+      "reqIds": [
+        "REQ-10"
       ],
       "version": 1
     }
@@ -88,6 +96,28 @@
       "summary": "Implement backend query APIs to support the app’s primary flows: list/search games; fetch a game by id; list/search/filter craftable items for a selected game (by name and category); fetch craftable item details by id including supplies, upgrades, and values.",
       "reqIds": [
         "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Use internet-sourced data to populate a full library/catalog of video games (not just crafting data for selected games) for game discovery/selection",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Extend the backend data model and query API to support a standalone, internet-sourced \"video game library\" (game discovery catalog) that is not limited to games that already have crafting/item data. Provide query methods to (a) list the library games and (b) fetch a library game by id so the frontend can display and navigate a large catalog.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual \"refresh/import\" operation that fetches from those sources, validates the payload, upserts the library entries into persistent storage, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message on failure).",
+      "reqIds": [
+        "REQ-9"
       ],
       "status": "pending"
     }

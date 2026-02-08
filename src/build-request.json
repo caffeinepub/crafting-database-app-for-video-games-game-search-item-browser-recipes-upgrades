@@ -1,143 +1,77 @@
 {
   "kind": "build_request",
-  "title": "Crafting Database App for Video Games (Game Search, Item Browser, Recipes, Upgrades, Web Updates)",
+  "title": "Import an internet-sourced full video game library for game discovery",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a core data model for crafting-focused video games that supports: (1) games, (2) craftable/buildable objects (food, tools, buildings, etc.), (3) per-object required supplies/materials with quantities, (4) per-object possible upgrades (upgrade paths/levels and their added/changed requirements), and (5) per-object values (e.g., sell value, durability, stats, or other numeric/string value fields). Persist this data in the Motoko backend so it can be queried by the frontend.",
+      "id": "REQ-8",
+      "text": "Extend the backend data model and query API to support a standalone, internet-sourced \"video game library\" (game discovery catalog) that is not limited to games that already have crafting/item data. Provide query methods to (a) list the library games and (b) fetch a library game by id so the frontend can display and navigate a large catalog.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "Make an application for video games with crafting mechanics where you can look up the game and it will list every buildable object from food, to tools, to buildings, listing supplies needed, possible upgrades, and values, using the internet to track any updates"
+          "Use the internet to get a full library of video games"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes types and stable storage for Game and CraftableItem records.",
-        "Each CraftableItem can include: category, materials list (material name + quantity), upgrades list (at least name/level + changes), and values map/list.",
-        "Data remains available across canister upgrades (use stable structures or stable vars)."
+        "Backend exposes a stable type for a library game entry (at minimum: id, name, description; additional metadata fields are optional).",
+        "Backend provides a query to list library games (paged or unpaged) and a query to fetch a library game by id.",
+        "The existing crafting-focused queries (getGames/getGame/getItems/etc.) continue to work unchanged for games that have crafting data."
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement backend query APIs to support the app’s primary flows: list/search games; fetch a game by id; list/search/filter craftable items for a selected game (by name and category); fetch craftable item details by id including supplies, upgrades, and values.",
+      "id": "REQ-9",
+      "text": "Add backend support for configuring one or more HTTPS JSON remote data sources for the global video game library and implement a manual \"refresh/import\" operation that fetches from those sources, validates the payload, upserts the library entries into persistent storage, and records overall library update status (idle/inProgress/success/failed + lastUpdated + error message on failure).",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "where you can look up the game and it will list every buildable object ... listing supplies needed, possible upgrades, and values"
+          "Use the internet to get a full library of video games"
         ]
       },
       "acceptanceCriteria": [
-        "There are backend methods to: (1) list/search games, (2) get game details, (3) list/search items for a game with optional category filter, (4) get item details.",
-        "Responses are deterministic and do not require frontend-side joining to reconstruct an item’s recipe/upgrades/values."
+        "Backend provides methods to set/get the video game library remote data sources (using the existing RemoteDataSource shape: id/url/description).",
+        "Backend provides a method to trigger a library refresh/import and a query to read the current library update status (including lastUpdated and any failure message).",
+        "If a refresh fails due to invalid JSON or validation issues, the status is set to failed with a readable English error message and previously imported library entries remain available.",
+        "Refreshing the library upserts entries by id (existing entries update; new entries insert) without creating duplicates."
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Add a data update mechanism that can incorporate crafting database updates “from the internet”: allow each game to have one or more configurable remote data sources (HTTPS URL endpoints returning JSON). Implement backend functions to (a) fetch and validate remote data, (b) upsert it into stored game/item data, and (c) record per-game lastUpdated timestamp and update status (success/failure + message). Provide a manual “Refresh data” action callable from the frontend to trigger an update for a selected game.",
-      "target": "both",
+      "id": "REQ-10",
+      "text": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "using the internet to track any updates"
+          "Use the internet to get a full library of video games"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores, per game, at least one remote source URL and last update metadata (timestamp + status).",
-        "Frontend provides a visible ‘Refresh data’ control on the game page and displays last update timestamp/status.",
-        "When refresh succeeds, item lists/details reflect the updated data without requiring a full page reload.",
-        "If refresh fails, the app shows a non-crashing error state and retains the last known good data."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Build the frontend UX to look up and select a game, then browse that game’s crafting database: a game search/list page; a game detail page with category tabs/filters (Food/Tools/Buildings/Other); an item list with search; and an item detail view showing required supplies, possible upgrades, and values in a clear, scannable layout.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "look up the game and it will list every buildable object from food, to tools, to buildings, listing supplies needed, possible upgrades, and values"
-        ]
-      },
-      "acceptanceCriteria": [
-        "User can search/select a game and navigate to its item list.",
-        "User can filter items by category and search by item name.",
-        "Item detail view renders: materials/quantities, upgrades (if any), and values (if any).",
-        "All user-facing text is in English."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Use React Query for all backend data fetching and cache invalidation. Ensure refresh/update operations invalidate the relevant queries (game metadata, item lists, item details) so the UI stays consistent.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All reads (games/items/item detail) use React Query hooks.",
-        "Triggering a refresh results in query invalidation/refetch and updated UI state.",
-        "Loading and error states are implemented for all main screens."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Establish a coherent visual theme for the app and apply it consistently across pages (typography, spacing, components, and colors). Theme direction: ‘Workshop ledger’—warm neutrals, paper-like surfaces, subtle grid/ruled accents, and crafting-inspired iconography. Avoid blue/purple as primary brand colors.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The app has a consistent theme across navigation, lists, and detail panels.",
-        "Primary colors are not blue/purple; the UI uses warm neutrals and a workshop/ledger feel.",
-        "Key UI surfaces (cards/tables) are readable and visually structured."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Add generated static image assets to support the theme and reference them in the UI (store in frontend/public/assets/generated). Include: an app logo and a subtle hero/banner illustration.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Generated images exist under frontend/public/assets/generated and are referenced directly as static assets (not served via backend).",
-        "Logo is used in the header/navigation; hero/banner is used on the landing/game search page without harming readability."
+        "Game search/list UI displays games from the new video game library queries (not only crafting-enabled games).",
+        "The page includes a clearly labeled control (English) to manually refresh/import the library and shows status feedback (in progress, last updated timestamp, and error message on failure).",
+        "After a successful refresh, the game list updates without a full page reload (React Query invalidates/refetches the relevant queries).",
+        "Selecting a game that does not yet have crafting data does not crash the UI; the game detail experience shows an appropriate English empty-state message indicating crafting data is not available for that game."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (single-actor architecture).",
-    "Do not edit files under frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose instead of modifying).",
-    "Do not introduce external databases or non-Motoko backend services.",
-    "Any internet-based update mechanism must use generic HTTPS/JSON sources (no restricted third-party auth integrations)."
+    "Backend must remain a single Motoko actor in backend/main.mo; add backend/migration.mo only if state schema changes require a conditional migration.",
+    "Do not edit frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Implementing real-time multiplayer or chat.",
-    "Supporting third-party authentication providers other than Internet Identity.",
-    "Building a complete dataset for every game at launch; initial build can ship with seed/sample data plus the update/import mechanism.",
-    "Integrating maps/geolocation or social media APIs."
+    "Integrating a specific third-party game database provider (no provider-specific API keys/auth flows unless the user supplies them).",
+    "Guaranteeing a literally complete global list of all video games from all platforms; implement a configurable import mechanism and display whatever the configured sources provide.",
+    "Real-time updates/push; updates remain manual (and/or whatever already exists), not websocket-driven."
   ],
   "imageRequirements": {
-    "required": [
-      "App logo, workshop-ledger style, simple emblem (app-logo.dim_512x512.png)",
-      "Wide banner illustration, cozy crafting bench with parchment/ledger aesthetic (hero-banner.dim_1600x900.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

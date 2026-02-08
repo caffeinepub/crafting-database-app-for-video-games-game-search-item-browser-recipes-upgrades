@@ -63,6 +63,11 @@ export interface Values {
     durability?: bigint;
     sellValue?: bigint;
 }
+export interface CatalogGame {
+    id: string;
+    name: string;
+    description: string;
+}
 export enum ItemCategory {
     tools = "tools",
     armor = "armor",
@@ -72,6 +77,9 @@ export enum ItemCategory {
     decorations = "decorations"
 }
 export interface backendInterface {
+    addCatalogGame(game: CatalogGame): Promise<void>;
+    getCatalogGame(gameId: string): Promise<CatalogGame | null>;
+    getCatalogGames(): Promise<Array<CatalogGame>>;
     getGame(gameId: string): Promise<Game | null>;
     getGames(): Promise<Array<Game>>;
     getItem(gameId: string, itemId: string): Promise<CraftableItem | null>;

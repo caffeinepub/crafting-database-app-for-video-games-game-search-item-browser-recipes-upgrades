@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useGetGames } from '../hooks/useQueries';
+import { useGetCatalogGames } from '../hooks/useQueries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { Search, AlertCircle, Gamepad2 } from 'lucide-react';
 
 export default function GameSearchPage() {
   const navigate = useNavigate();
-  const { data: games, isLoading, error } = useGetGames();
+  const { data: games, isLoading, error } = useGetCatalogGames();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredGames = useMemo(() => {
@@ -52,10 +52,10 @@ export default function GameSearchPage() {
         <div className="container relative py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Crafting Compendium
+              Video Game Library
             </h1>
             <p className="mb-8 text-lg text-muted-foreground md:text-xl">
-              Your comprehensive reference for crafting recipes, materials, and upgrades across your favorite games
+              Explore a comprehensive collection of video games from around the world
             </p>
             
             {/* Search Bar */}
@@ -92,7 +92,7 @@ export default function GameSearchPage() {
         ) : filteredGames.length === 0 ? (
           <EmptyState
             title={searchTerm ? 'No games found' : 'No games available'}
-            description={searchTerm ? 'Try a different search term' : 'Games will appear here once added'}
+            description={searchTerm ? 'Try a different search term' : 'Games will appear here once imported from the internet'}
             icon={<Gamepad2 className="h-8 w-8 text-muted-foreground" />}
           />
         ) : (
@@ -123,7 +123,7 @@ export default function GameSearchPage() {
                       onClick={() => navigate({ to: '/game/$gameId', params: { gameId: game.id } })}
                       className="w-full"
                     >
-                      Browse Items
+                      View Details
                     </Button>
                   </CardContent>
                 </Card>

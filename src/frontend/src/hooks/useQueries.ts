@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Game, CraftableItem, UpdateStatus, ItemCategory } from '../backend';
+import type { Game, CraftableItem, UpdateStatus, ItemCategory, CatalogGame } from '../backend';
 
 // Query keys
 export const queryKeys = {
@@ -10,9 +10,11 @@ export const queryKeys = {
   itemsByCategory: (gameId: string, category: ItemCategory) => ['items', gameId, category] as const,
   item: (gameId: string, itemId: string) => ['item', gameId, itemId] as const,
   updateStatus: (gameId: string) => ['updateStatus', gameId] as const,
+  catalogGames: ['catalogGames'] as const,
+  catalogGame: (gameId: string) => ['catalogGame', gameId] as const,
 };
 
-// Get all games
+// Get all crafting games (games with crafting data)
 export function useGetGames() {
   const { actor, isFetching } = useActor();
 
@@ -26,7 +28,7 @@ export function useGetGames() {
   });
 }
 
-// Get single game
+// Get single crafting game
 export function useGetGame(gameId: string) {
   const { actor, isFetching } = useActor();
 
@@ -35,6 +37,34 @@ export function useGetGame(gameId: string) {
     queryFn: async () => {
       if (!actor) return null;
       return actor.getGame(gameId);
+    },
+    enabled: !!actor && !isFetching && !!gameId,
+  });
+}
+
+// Get all catalog games (library games from internet)
+export function useGetCatalogGames() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<CatalogGame[]>({
+    queryKey: queryKeys.catalogGames,
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getCatalogGames();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+// Get single catalog game
+export function useGetCatalogGame(gameId: string) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<CatalogGame | null>({
+    queryKey: queryKeys.catalogGame(gameId),
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getCatalogGame(gameId);
     },
     enabled: !!actor && !isFetching && !!gameId,
   });

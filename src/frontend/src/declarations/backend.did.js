@@ -8,6 +8,11 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const CatalogGame = IDL.Record({
+  'id' : IDL.Text,
+  'name' : IDL.Text,
+  'description' : IDL.Text,
+});
 export const RemoteDataSource = IDL.Record({
   'id' : IDL.Text,
   'url' : IDL.Text,
@@ -65,6 +70,9 @@ export const UpdateStatus = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  'addCatalogGame' : IDL.Func([CatalogGame], [], []),
+  'getCatalogGame' : IDL.Func([IDL.Text], [IDL.Opt(CatalogGame)], ['query']),
+  'getCatalogGames' : IDL.Func([], [IDL.Vec(CatalogGame)], ['query']),
   'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
   'getGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
   'getItem' : IDL.Func(
@@ -85,6 +93,11 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const CatalogGame = IDL.Record({
+    'id' : IDL.Text,
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+  });
   const RemoteDataSource = IDL.Record({
     'id' : IDL.Text,
     'url' : IDL.Text,
@@ -142,6 +155,9 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    'addCatalogGame' : IDL.Func([CatalogGame], [], []),
+    'getCatalogGame' : IDL.Func([IDL.Text], [IDL.Opt(CatalogGame)], ['query']),
+    'getCatalogGames' : IDL.Func([], [IDL.Vec(CatalogGame)], ['query']),
     'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
     'getGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
     'getItem' : IDL.Func(

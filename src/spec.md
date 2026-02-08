@@ -1,15 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Build a crafting database app for video games where users can search for a game, browse craftable items (with recipes, upgrades, and values), and refresh game data from configurable HTTPS/JSON sources.
+**Goal:** Import and browse an internet-sourced video game discovery library, with a manual refresh workflow and visible import status.
 
 **Planned changes:**
-- Create and persist a Motoko backend data model for Games and Craftable Items, including materials/quantities, upgrade paths, and flexible value fields, with upgrade-safe stable storage.
-- Implement backend query APIs to list/search games, get game details, list/search/filter items by game (name + category), and fetch full item details without frontend-side joining.
-- Add per-game remote JSON source configuration and a backend update flow to fetch/validate/upsert data, tracking lastUpdated timestamp and success/failure status.
-- Build frontend pages for game search/list, game detail with category filters (Food/Tools/Buildings/Other), item list with search, and item detail views for supplies, upgrades, and values.
-- Use React Query for all data fetching, loading/error states, and cache invalidation/refetch after manual “Refresh data”.
-- Apply a consistent “workshop ledger” visual theme (warm neutrals, paper-like surfaces, subtle ruled accents; avoid blue/purple as primary colors).
-- Add and reference static generated theme assets (logo in header/nav; hero/banner on landing page).
+- Extend the backend to store a standalone "video game library" catalog (separate from crafting/item data) and expose queries to list library games and fetch a library game by id.
+- Add backend configuration for one or more HTTPS JSON remote data sources and a manual refresh/import operation that validates, upserts by id, persists results, and records update status (idle/inProgress/success/failed with lastUpdated and error message).
+- Update the frontend discovery/search experience to display library games, provide a manual refresh/import control, show refresh status (in progress, last updated, error), and invalidate/refetch data after refresh.
+- Ensure game detail navigation handles games without crafting data by showing an English empty-state message instead of crashing.
 
-**User-visible outcome:** Users can search/select a game, browse and filter its craftable items, view item recipes/upgrades/values, and manually refresh the game’s crafting data from the web while seeing update status and timestamps.
+**User-visible outcome:** Users can browse a larger, internet-imported game catalog, manually trigger a library import, see the current import status/last updated/error, and open game details even when crafting data is unavailable.

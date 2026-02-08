@@ -2,95 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-data-update-mechanism-that-can-incorporate-crafting-database-updates-from-the-internet-allow-each-game-to-have-one-or-more-configurable-remote-data-sources-https-url-endpoints-returning-json-implement-backend-functions-to-a-fetch-and-validate-remote-data-b-upsert-it-into-stored-game-item-data-and-c-record-per-game-lastupdated-timestamp-and-update-status-success-failure-message-provide-a-manual-refresh-data-action-callable-from-the-frontend-to-trigger-an-update-for-a-selected-game",
-      "featureTitle": "Add a data update mechanism that can incorporate crafting database updates “from the internet”: allow each game to have one or more configurable remote data sources (HTTPS URL endpoints returning JSON). Implement backend functions to (a) fetch and validate remote data, (b) upsert it into stored game/item data, and (c) record per-game lastUpdated timestamp and update status (success/failure + message). Provide a manual “Refresh data” action callable from the frontend to trigger an update for a selected game.",
+      "featureId": "feature-update-the-frontend-game-discovery-ux-to-browse-the-full-internet-imported-video-game-library-show-the-library-games-on-the-search-list-page-add-a-user-action-to-trigger-a-library-refresh-import-and-display-the-library-update-status-in-progress-last-updated-error-ensure-react-query-cache-invalidation-keeps-the-list-consistent-after-refresh",
+      "featureTitle": "Update the frontend game discovery UX to browse the full internet-imported video game library: show the library games on the search/list page, add a user action to trigger a library refresh/import, and display the library update status (in progress / last updated / error). Ensure React Query cache invalidation keeps the list consistent after refresh.",
       "files": [
-        "frontend/src/pages/GameDetailPage.tsx"
-      ],
-      "components": [
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-the-frontend-ux-to-look-up-and-select-a-game-then-browse-that-game-s-crafting-database-a-game-search-list-page-a-game-detail-page-with-category-tabs-filters-food-tools-buildings-other-an-item-list-with-search-and-an-item-detail-view-showing-required-supplies-possible-upgrades-and-values-in-a-clear-scannable-layout",
-      "featureTitle": "Build the frontend UX to look up and select a game, then browse that game’s crafting database: a game search/list page; a game detail page with category tabs/filters (Food/Tools/Buildings/Other); an item list with search; and an item detail view showing required supplies, possible upgrades, and values in a clear, scannable layout.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/layout/Header.tsx",
+        "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/GameDetailPage.tsx",
-        "frontend/src/pages/GameSearchPage.tsx",
-        "frontend/src/pages/ItemDetailPage.tsx"
-      ],
-      "components": [
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-use-react-query-for-all-backend-data-fetching-and-cache-invalidation-ensure-refresh-update-operations-invalidate-the-relevant-queries-game-metadata-item-lists-item-details-so-the-ui-stays-consistent",
-      "featureTitle": "Use React Query for all backend data fetching and cache invalidation. Ensure refresh/update operations invalidate the relevant queries (game metadata, item lists, item details) so the UI stays consistent.",
-      "files": [
-        "frontend/src/pages/GameDetailPage.tsx",
-        "frontend/src/pages/GameSearchPage.tsx",
-        "frontend/src/pages/ItemDetailPage.tsx"
-      ],
-      "components": [
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-establish-a-coherent-visual-theme-for-the-app-and-apply-it-consistently-across-pages-typography-spacing-components-and-colors-theme-direction-workshop-ledger-warm-neutrals-paper-like-surfaces-subtle-grid-ruled-accents-and-crafting-inspired-iconography-avoid-blue-purple-as-primary-brand-colors",
-      "featureTitle": "Establish a coherent visual theme for the app and apply it consistently across pages (typography, spacing, components, and colors). Theme direction: ‘Workshop ledger’—warm neutrals, paper-like surfaces, subtle grid/ruled accents, and crafting-inspired iconography. Avoid blue/purple as primary brand colors.",
-      "files": [
-        "frontend/src/components/layout/Header.tsx",
-        "frontend/src/index.css",
-        "frontend/src/pages/GameSearchPage.tsx",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-generated-static-image-assets-to-support-the-theme-and-reference-them-in-the-ui-store-in-frontend-public-assets-generated-include-an-app-logo-and-a-subtle-hero-banner-illustration",
-      "featureTitle": "Add generated static image assets to support the theme and reference them in the UI (store in frontend/public/assets/generated). Include: an app logo and a subtle hero/banner illustration.",
-      "files": [
-        "frontend/src/components/layout/Header.tsx",
         "frontend/src/pages/GameSearchPage.tsx"
       ],
       "components": [
@@ -102,7 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-10"
       ],
       "confidence": "high"
     }

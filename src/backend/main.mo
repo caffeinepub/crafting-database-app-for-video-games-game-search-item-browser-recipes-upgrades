@@ -3,9 +3,12 @@ import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Iter "mo:core/Iter";
-import Runtime "mo:core/Runtime";
+import List "mo:core/List";
 import Order "mo:core/Order";
+import Runtime "mo:core/Runtime";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   public type UpdateStatus = {
     status : {
@@ -69,6 +72,12 @@ actor {
     remoteDataSources : [RemoteDataSource];
   };
 
+  public type CatalogGame = {
+    id : Text;
+    name : Text;
+    description : Text;
+  };
+
   public type CraftingGame = {
     game : Game;
     items : [CraftableItem];
@@ -85,6 +94,7 @@ actor {
   };
 
   let craftingGames = Map.empty<Text, CraftingGame>();
+  let catalogGames = Map.empty<Text, CatalogGame>();
 
   func getPattern(gameId : Text, gameMap : Map.Map<Text, CraftableItem>) : ?CraftableItem {
     gameMap.get(gameId);
@@ -140,5 +150,20 @@ actor {
       case (?game) { ?game.updateStatus };
       case (null) { null };
     };
+  };
+
+  public query ({ caller }) func getCatalogGames() : async [CatalogGame] {
+    catalogGames.values().toArray();
+  };
+
+  public query ({ caller }) func getCatalogGame(gameId : Text) : async ?CatalogGame {
+    catalogGames.get(gameId);
+  };
+
+  public shared ({ caller }) func addCatalogGame(game : CatalogGame) : async () {
+    if (catalogGames.containsKey(game.id)) {
+      Runtime.trap("Game with id " # game.id # " already exists in the catalog");
+    };
+    catalogGames.add(game.id, game);
   };
 };

@@ -10,6 +10,11 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface CatalogGame {
+  'id' : string,
+  'name' : string,
+  'description' : string,
+}
 export interface CraftableItem {
   'id' : string,
   'requiredSupplies' : Array<Supply>,
@@ -62,6 +67,9 @@ export interface Values {
   'sellValue' : [] | [bigint],
 }
 export interface _SERVICE {
+  'addCatalogGame' : ActorMethod<[CatalogGame], undefined>,
+  'getCatalogGame' : ActorMethod<[string], [] | [CatalogGame]>,
+  'getCatalogGames' : ActorMethod<[], Array<CatalogGame>>,
   'getGame' : ActorMethod<[string], [] | [Game]>,
   'getGames' : ActorMethod<[], Array<Game>>,
   'getItem' : ActorMethod<[string, string], [] | [CraftableItem]>,
