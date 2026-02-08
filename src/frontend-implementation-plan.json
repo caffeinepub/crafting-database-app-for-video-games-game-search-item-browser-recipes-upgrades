@@ -1,0 +1,177 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Crafting Database Frontend (Game Search, Item Browser, Recipes, Upgrades, Refresh)",
+  "requirements": [
+    {
+      "id": "REQ-3",
+      "summary": "Add a per-game manual refresh action in the UI and display update status/last updated; keep UI responsive on success/failure via React Query invalidation.",
+      "acceptanceCriteria": [
+        "Frontend provides a visible ‘Refresh data’ control on the game page and displays last update timestamp/status.",
+        "When refresh succeeds, item lists/details reflect the updated data without requiring a full page reload.",
+        "If refresh fails, the app shows a non-crashing error state and retains the last known good data."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/backend.d.ts",
+          "operation": "modify",
+          "description": "Extend the backend interface types to include the backend capability for triggering a per-game remote data refresh (used by the frontend refresh button) and ensure UpdateStatus typing is consumable in UI."
+        },
+        {
+          "path": "frontend/src/api/queries.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for reading game/item data and update status (games list, game details, items list, item details, update status) using useActor()."
+        },
+        {
+          "path": "frontend/src/api/mutations.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook for triggering game refresh; on success/failure invalidate relevant queries (game, update status, item lists, item details) to keep UI consistent."
+        },
+        {
+          "path": "frontend/src/pages/GameDetailPage.tsx",
+          "operation": "create",
+          "description": "Implement the Game Detail page UI: show game metadata, update status/last updated, and a ‘Refresh data’ control wired to the refresh mutation; include non-crashing loading/error states. Use shadcn-ui components (e.g., Button, Card, Alert) to present status and errors; Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Build the core browsing UX: game search/list, game detail with category filters and item search, and an item detail view showing supplies, upgrades, and values.",
+      "acceptanceCriteria": [
+        "User can search/select a game and navigate to its item list.",
+        "User can filter items by category and search by item name.",
+        "Item detail view renders: materials/quantities, upgrades (if any), and values (if any).",
+        "All user-facing text is in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell and route structure for: game search/list, game detail, and item detail views (wire all pages so none are orphaned)."
+        },
+        {
+          "path": "frontend/src/pages/GameSearchPage.tsx",
+          "operation": "create",
+          "description": "Implement the landing/game search page: list games, allow text search on the client side, and navigate to a selected game. Use shadcn-ui components (Input, Card, Button) for search and list UI; Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/GameDetailPage.tsx",
+          "operation": "modify",
+          "description": "Add category tabs/filters (Food/Tools/Buildings/Other mapping to available categories), item search within the selected game, and an item list that navigates to item detail. Use shadcn-ui Tabs, Badge, and Card components for filters and list rows; Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ItemDetailPage.tsx",
+          "operation": "create",
+          "description": "Implement the item detail view with a clear, scannable layout: required supplies (name + quantity), upgrades (levels/cost/supplies), and values (sell value, durability, stats). Use shadcn-ui Table and Separator components for structured sections; Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "create",
+          "description": "Create a reusable header with app name/logo and a simple navigation link back to the game search/list. Use shadcn-ui Button for navigation actions; Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ui/EmptyState.tsx",
+          "operation": "create",
+          "description": "Add a small reusable empty-state component for ‘no results’ / ‘no items’ cases to keep main screens consistent (English-only messaging)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Use React Query for all backend reads and ensure refresh operations invalidate/refetch the correct cached data; implement loading/error states across main screens.",
+      "acceptanceCriteria": [
+        "All reads (games/items/item detail) use React Query hooks.",
+        "Triggering a refresh results in query invalidation/refetch and updated UI state.",
+        "Loading and error states are implemented for all main screens."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/api/queryKeys.ts",
+          "operation": "create",
+          "description": "Define centralized React Query keys for games, game details, items (by game/category/search), item detail, and update status to ensure consistent invalidation."
+        },
+        {
+          "path": "frontend/src/api/queries.ts",
+          "operation": "modify",
+          "description": "Ensure all reads are implemented as React Query hooks (no direct actor calls inside pages) and provide consistent loading/error outputs for pages to consume."
+        },
+        {
+          "path": "frontend/src/pages/GameSearchPage.tsx",
+          "operation": "modify",
+          "description": "Wire the page to React Query game list hook and show loading/error/empty states (English-only)."
+        },
+        {
+          "path": "frontend/src/pages/GameDetailPage.tsx",
+          "operation": "modify",
+          "description": "Wire the page to React Query hooks for game details, items list (with category filter), and update status; show loading/error/empty states and keep item list consistent with cache invalidation after refresh."
+        },
+        {
+          "path": "frontend/src/pages/ItemDetailPage.tsx",
+          "operation": "modify",
+          "description": "Wire the page to React Query item detail hook; show loading/error/empty states and ensure it updates after refresh invalidation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Apply a consistent ‘workshop ledger’ visual theme (warm neutrals, paper surfaces, subtle ruled/grid accents, crafting-inspired feel) across the app without blue/purple primary branding.",
+      "acceptanceCriteria": [
+        "The app has a consistent theme across navigation, lists, and detail panels.",
+        "Primary colors are not blue/purple; the UI uses warm neutrals and a workshop/ledger feel.",
+        "Key UI surfaces (cards/tables) are readable and visually structured."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Create global styling and CSS variables for a warm-neutral ‘workshop ledger’ theme (paper-like background, ink-like foreground, subtle ruled/grid accent), aligning with Tailwind/shadcn token variables; avoid blue/purple as primary colors."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust/extend theme tokens (if needed) to support the ledger palette and subtle background accents while continuing to use the existing CSS-variable-driven color system."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Apply themed header styling (paper surface, border rules, typography) consistent with the ledger theme using Tailwind utilities and shadcn-ui primitives; Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/GameSearchPage.tsx",
+          "operation": "modify",
+          "description": "Apply themed layout/typography and ensure hero/banner usage (REQ-7) maintains readability on paper-like surfaces."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add and reference generated static theme assets (logo + hero/banner) from frontend/public/assets/generated.",
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated and are referenced directly as static assets (not served via backend).",
+        "Logo is used in the header/navigation; hero/banner is used on the landing/game search page without harming readability."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/app-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated app logo asset at the exact required path for static use in the UI."
+        },
+        {
+          "path": "frontend/public/assets/generated/hero-banner.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated hero/banner illustration asset at the exact required path for static use in the UI."
+        },
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Reference the static logo image from frontend/public/assets/generated/app-logo.dim_512x512.png in the header/navigation (ensure accessible alt text in English)."
+        },
+        {
+          "path": "frontend/src/pages/GameSearchPage.tsx",
+          "operation": "modify",
+          "description": "Reference the static banner image from frontend/public/assets/generated/hero-banner.dim_1600x900.png on the landing/game search page with an overlay/structure that preserves text readability (English-only)."
+        }
+      ]
+    }
+  ]
+}

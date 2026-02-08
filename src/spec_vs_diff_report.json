@@ -1,0 +1,100 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T22:53:45.290Z",
+  "summary": "Diff adds a Motoko backend actor with basic types and read-only query endpoints, plus a React/TanStack Router + React Query frontend with themed pages for game search, game detail, and item detail. However, core persistence/stable storage and the internet JSON update/refresh mechanism (backend + frontend mutation/invalidation) are not implemented, and the required generated image assets are referenced but not present in the diff.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Persist games and craftable items in stable storage across canister upgrades (stable vars/structures).",
+      "reason": "Backend uses an in-memory Map initialized with `Map.empty` (non-stable) and provides no `stable var` / upgrade hooks; data would not persist across upgrades.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Backend APIs to list/search games; list/search/filter craftable items for a selected game (by name and category) with deterministic responses.",
+      "reason": "Backend provides `getGames` and `getGame` but no game search method. For items it provides `getItems` and `getItemsByCategory`, but no combined per-game search-by-name with optional category filter; `searchItems` searches across all games and is not scoped to a selected game.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Internet-based data update mechanism: per-game configurable remote HTTPS/JSON sources; backend fetch/validate/upsert; record lastUpdated + success/failure message; frontend manual “Refresh data” action showing status; refresh invalidates queries and updates UI without full reload; failure shows non-crashing error and keeps last good data.",
+      "reason": "Backend defines `RemoteDataSource` and `UpdateStatus` and exposes only `getUpdateStatus`; there are no backend methods to fetch remote JSON, validate, upsert, or trigger refresh, and no evidence of storing/updating timestamps/status. Frontend has queries for update status but no mutation hook/action to trigger refresh or invalidate/refetch affected queries.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/GameDetailPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Use React Query for refresh/update operations with cache invalidation for game metadata, item lists, and item details; implement loading/error states for refresh path.",
+      "reason": "React Query read hooks are present, but there is no refresh/update mutation in `useQueries.ts`, and thus no explicit invalidation tied to a refresh action.",
+      "evidence": [
+        "frontend/src/hooks/useQueries.ts"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Add generated static image assets under `frontend/public/assets/generated` (logo and hero banner) and reference them in the UI.",
+      "reason": "UI references `/assets/generated/app-logo.dim_512x512.png` and `/assets/generated/hero-banner.dim_1600x900.png`, but the diff shows no added files under `frontend/public/assets/generated`, so the required assets are not present in the change set.",
+      "evidence": [
+        "frontend/src/components/layout/Header.tsx",
+        "frontend/src/pages/GameSearchPage.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added Internet Identity actor/identity integration hooks and actor recreation logic beyond the stated requirements for browsing/updating crafting data.",
+      "reason": "BuildRequest focuses on crafting database browsing and refresh/update; it does not request authentication/Internet Identity hookup for these flows (and constraints even mention not editing certain auth-related hook files).",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts",
+        "frontend/src/hooks/useInternetIdentity.ts",
+        "frontend/src/main.tsx"
+      ]
+    },
+    {
+      "description": "Footer includes third-party attribution link to caffeine.ai and a heart icon.",
+      "reason": "Not requested by any REQ; adds branding/attribution not specified.",
+      "evidence": [
+        "frontend/src/components/layout/Footer.tsx"
+      ]
+    },
+    {
+      "description": "Item categories include weapons/armor/decorations/buildingMaterials rather than the specified Food/Tools/Buildings/Other tabs/filters.",
+      "reason": "BuildRequest specifies category tabs/filters: Food/Tools/Buildings/Other; diff implements a different set and does not show an 'Other' category.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/pages/GameDetailPage.tsx",
+        "frontend/src/pages/ItemDetailPage.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.74,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/EmptyState.tsx",
+    "frontend/src/components/layout/Footer.tsx",
+    "frontend/src/components/layout/Header.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/GameDetailPage.tsx",
+    "frontend/src/pages/GameSearchPage.tsx",
+    "frontend/src/pages/ItemDetailPage.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}
