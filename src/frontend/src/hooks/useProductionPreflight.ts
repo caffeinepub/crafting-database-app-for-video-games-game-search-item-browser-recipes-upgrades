@@ -1,105 +1,134 @@
 import { useEffect, useRef } from 'react';
 import { useActor } from './useActor';
+import { usePreflightDiagnosticsStore, type PreflightMethodResult } from '../state/preflightDiagnosticsStore';
 
 /**
  * Production preflight hook that performs non-blocking connectivity checks
  * on initial app load to verify backend actor methods are accessible.
- * Logs structured diagnostics without affecting UX.
+ * Records structured diagnostics in the preflight store for display in the Diagnostics UI.
+ * 
+ * Hardened to avoid false-negative failures: methods that return null/empty arrays
+ * for non-existent IDs are considered successful connectivity checks.
  */
 export function useProductionPreflight() {
   const { actor } = useActor();
   const hasRun = useRef(false);
+  const { setRunning, setSkipped, setComplete } = usePreflightDiagnosticsStore();
 
   useEffect(() => {
     // Only run once on initial mount
-    if (hasRun.current || !actor) return;
+    if (hasRun.current) return;
+    
+    // If no actor, mark as skipped
+    if (!actor) {
+      if (!hasRun.current) {
+        setSkipped();
+      }
+      return;
+    }
+    
     hasRun.current = true;
+    setRunning();
 
     const runPreflight = async () => {
-      const checks = {
-        getCatalogGames: false,
-        getCatalogGame: false,
-        getGames: false,
-        getGame: false,
-        getItems: false,
-        getItem: false,
-        getItemsByCategory: false,
-        getUpdateStatus: false,
+      const results: PreflightMethodResult[] = [];
+
+      // Test method with expected result validation
+      const testMethod = async (
+        methodName: string, 
+        testFn: () => Promise<any>,
+        validateResult?: (result: any) => boolean
+      ) => {
+        try {
+          const result = await testFn();
+          
+          // If validator provided, use it; otherwise any non-throw is success
+          const isValid = validateResult ? validateResult(result) : true;
+          
+          if (isValid) {
+            results.push({ method: methodName, status: 'pass' });
+            console.log(`[Preflight] ${methodName}: PASS`);
+          } else {
+            results.push({ 
+              method: methodName, 
+              status: 'fail',
+              error: 'Unexpected result format' 
+            });
+            console.warn(`[Preflight] ${methodName}: FAIL - Unexpected result format`);
+          }
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          results.push({ 
+            method: methodName, 
+            status: 'fail',
+            error: errorMessage 
+          });
+          console.warn(`[Preflight] ${methodName}: FAIL -`, errorMessage);
+        }
       };
 
       try {
-        // Test getCatalogGames
-        try {
-          await actor.getCatalogGames();
-          checks.getCatalogGames = true;
-        } catch (e) {
-          console.warn('[Preflight] getCatalogGames failed:', e);
-        }
+        // Test catalog methods (these should return arrays, possibly empty)
+        await testMethod(
+          'getCatalogGames', 
+          () => actor.getCatalogGames(),
+          (result) => Array.isArray(result)
+        );
+        
+        await testMethod(
+          'getCatalogGame', 
+          () => actor.getCatalogGame('preflight-test-id'),
+          (result) => result === null || (typeof result === 'object' && result !== null)
+        );
 
-        // Test getCatalogGame with a test ID
-        try {
-          await actor.getCatalogGame('test-id');
-          checks.getCatalogGame = true;
-        } catch (e) {
-          console.warn('[Preflight] getCatalogGame failed:', e);
-        }
+        // Test crafting game methods (these should return arrays/null, possibly empty)
+        await testMethod(
+          'getGames', 
+          () => actor.getGames(),
+          (result) => Array.isArray(result)
+        );
+        
+        await testMethod(
+          'getGame', 
+          () => actor.getGame('preflight-test-id'),
+          (result) => result === null || (typeof result === 'object' && result !== null)
+        );
+        
+        await testMethod(
+          'getItems', 
+          () => actor.getItems('preflight-test-id'),
+          (result) => Array.isArray(result)
+        );
+        
+        await testMethod(
+          'getItem', 
+          () => actor.getItem('preflight-test-game-id', 'preflight-test-item-id'),
+          (result) => result === null || (typeof result === 'object' && result !== null)
+        );
+        
+        await testMethod(
+          'getItemsByCategory', 
+          () => actor.getItemsByCategory('preflight-test-id', 'food' as any),
+          (result) => Array.isArray(result)
+        );
+        
+        await testMethod(
+          'getUpdateStatus', 
+          () => actor.getUpdateStatus('preflight-test-id'),
+          (result) => result === null || (typeof result === 'object' && result !== null)
+        );
 
-        // Test getGames
-        try {
-          await actor.getGames();
-          checks.getGames = true;
-        } catch (e) {
-          console.warn('[Preflight] getGames failed:', e);
-        }
-
-        // Test getGame with a test ID
-        try {
-          await actor.getGame('test-id');
-          checks.getGame = true;
-        } catch (e) {
-          console.warn('[Preflight] getGame failed:', e);
-        }
-
-        // Test getItems with a test ID
-        try {
-          await actor.getItems('test-id');
-          checks.getItems = true;
-        } catch (e) {
-          console.warn('[Preflight] getItems failed:', e);
-        }
-
-        // Test getItem with test IDs
-        try {
-          await actor.getItem('test-game-id', 'test-item-id');
-          checks.getItem = true;
-        } catch (e) {
-          console.warn('[Preflight] getItem failed:', e);
-        }
-
-        // Test getItemsByCategory with test data
-        try {
-          await actor.getItemsByCategory('test-id', 'food' as any);
-          checks.getItemsByCategory = true;
-        } catch (e) {
-          console.warn('[Preflight] getItemsByCategory failed:', e);
-        }
-
-        // Test getUpdateStatus with a test ID
-        try {
-          await actor.getUpdateStatus('test-id');
-          checks.getUpdateStatus = true;
-        } catch (e) {
-          console.warn('[Preflight] getUpdateStatus failed:', e);
-        }
+        // Store results in the diagnostics store
+        setComplete(results);
 
         // Log summary
-        const passedChecks = Object.values(checks).filter(Boolean).length;
-        const totalChecks = Object.keys(checks).length;
+        const passedChecks = results.filter(r => r.status === 'pass').length;
+        const totalChecks = results.length;
         
         console.log('[Preflight] Backend connectivity check complete:', {
           passed: passedChecks,
           total: totalChecks,
-          details: checks,
+          details: results,
         });
 
         if (passedChecks < totalChecks) {
@@ -107,10 +136,11 @@ export function useProductionPreflight() {
         }
       } catch (error) {
         console.error('[Preflight] Unexpected error during preflight checks:', error);
+        setComplete(results);
       }
     };
 
     // Run preflight asynchronously without blocking
     runPreflight();
-  }, [actor]);
+  }, [actor, setRunning, setSkipped, setComplete]);
 }

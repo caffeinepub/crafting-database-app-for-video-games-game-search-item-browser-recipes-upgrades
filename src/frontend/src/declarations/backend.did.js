@@ -86,6 +86,11 @@ export const idlService = IDL.Service({
       [IDL.Vec(CraftableItem)],
       ['query'],
     ),
+  'getProductionItems' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(CraftableItem)],
+      ['query'],
+    ),
   'getUpdateStatus' : IDL.Func([IDL.Text], [IDL.Opt(UpdateStatus)], ['query']),
   'searchItems' : IDL.Func([IDL.Text], [IDL.Vec(CraftableItem)], ['query']),
 });
@@ -168,6 +173,11 @@ export const idlFactory = ({ IDL }) => {
     'getItems' : IDL.Func([IDL.Text], [IDL.Vec(CraftableItem)], ['query']),
     'getItemsByCategory' : IDL.Func(
         [IDL.Text, ItemCategory],
+        [IDL.Vec(CraftableItem)],
+        ['query'],
+      ),
+    'getProductionItems' : IDL.Func(
+        [IDL.Text],
         [IDL.Vec(CraftableItem)],
         ['query'],
       ),

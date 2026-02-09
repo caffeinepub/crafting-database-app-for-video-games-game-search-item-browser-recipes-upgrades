@@ -1,72 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Production promotion readiness (frontend)",
+  "title": "Promote currently deployed draft build to production (publish-only)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Align the frontend build and static assets with the reviewed draft (Draft Version 2) so production serves the same app behavior without draft-only messaging.",
+      "summary": "Document and execute a publish-only promotion of the currently deployed draft artifact to production without rebuilding or changing the app.",
       "acceptanceCriteria": [
-        "A production deployment is created from the current draft (Draft Version 2).",
-        "The production app loads successfully and core flows work: game search/list, game detail, item detail pages render without runtime errors.",
-        "Production deployment does not show draft-only messaging or review-only banners (if any exist)."
+        "The production deployment completes successfully using the exact same artifact as the current draft (no new build changes).",
+        "After publishing, the production URL/canister serves the same UI/behavior as the draft that was approved.",
+        "No backend schema/state migrations are introduced as part of publishing."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/app-logo.dim_512x512.png",
+          "path": "frontend/docs/publish-to-production.md",
           "operation": "create",
-          "description": "Add the generated app logo asset to the production-served static assets at frontend/public/assets/generated/app-logo.dim_512x512.png so the Header renders correctly in production."
-        },
-        {
-          "path": "frontend/public/assets/generated/hero-banner.dim_1600x900.png",
-          "operation": "create",
-          "description": "Add the generated hero banner asset to the production-served static assets at frontend/public/assets/generated/hero-banner.dim_1600x900.png so the Game Search hero background renders correctly in production."
-        },
-        {
-          "path": "frontend/src/components/layout/Header.tsx",
-          "operation": "modify",
-          "description": "Verify the production build serves the logo from frontend/public/assets/generated/app-logo.dim_512x512.png and that no draft/review-only banner text is rendered in the header area. (shadcn-ui is already used via existing UI components; do not modify immutable ui component files.)"
-        },
-        {
-          "path": "frontend/src/pages/GameSearchPage.tsx",
-          "operation": "modify",
-          "description": "Verify the production build serves the hero image from frontend/public/assets/generated/hero-banner.dim_1600x900.png and that no draft/review-only messaging is shown on the main browsing page."
-        },
-        {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Audit and ensure there is no draft-only/review-only copy in the document title/metadata, and keep production-friendly branding only (no functional UI changes)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Add a lightweight frontend pre-production verification pass to confirm backend connectivity and basic route navigation without uncaught exceptions in production.",
-      "acceptanceCriteria": [
-        "From the production frontend, queries for catalog games and crafting games return successfully (or return empty lists without errors if no data exists).",
-        "Navigating between routes '/', '/game/$gameId', and '/game/$gameId/item/$itemId' works in production without broken links or blank screens.",
-        "No uncaught exceptions occur in the browser console during basic navigation and data loading."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useProductionPreflight.ts",
-          "operation": "create",
-          "description": "Create a small hook that, on initial app load, performs safe actor connectivity checks by calling the same actor methods used by the UI (getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus) with defensive try/catch and non-blocking behavior; log failures in a structured way without changing UX."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wire the preflight hook into the app lifecycle so it runs once on startup (and does not create new routes/pages). Ensure it does not introduce runtime errors or visible draft/review banners."
-        },
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Harden actor creation and query invalidation against transient production network issues (e.g., ensure errors are contained and do not cascade into uncaught exceptions during navigation). Use the existing core-infrastructure backend connection configuration where applicable; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add defensive handling to queries so production navigation cannot result in uncaught exceptions when data is missing or actor calls fail; keep behavior as empty-list/nullable returns consistent with current UI expectations."
+          "description": "Add a publish-only runbook describing how to promote the already-built draft artifact to production (no rebuild, no code/config changes), including verification steps (URL checks, key user flows) and explicit notes to avoid introducing migrations or any app changes during the publish action."
         }
       ]
     }

@@ -1,59 +1,59 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T23:37:34.133Z",
-  "summary": "REQ-2 appears implemented via a new non-blocking frontend preflight hook that calls the specified backend actor methods and via more defensive query hooks. REQ-1 (actual promotion of Draft Version 2 to production) is not evidenced by any deployment/release configuration changes in the provided diff summary.",
+  "generatedAt": "2026-02-09T00:12:24.941Z",
+  "summary": "The diff introduces multiple code and documentation changes (including a new backend migration and modifications to backend/main.mo), which violates the publish-only requirement to promote the existing draft artifact to production with no code/config changes and no migrations.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
-      "reason": "The diff shows frontend/runtime robustness and connectivity checks, but no evidence of any release/promotion mechanism (e.g., environment config, canister IDs for production, deployment pipeline/scripts, version promotion metadata) that would actually create a production deployment from the current draft.",
+      "requirement": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
+      "reason": "The diff contains new and modified source files, so the production deployment would not be using the exact same draft artifact. Additionally, a backend migration file was added, which explicitly violates the publish-only/migration prohibition.",
       "evidence": [
-        "frontend/src/hooks/useProductionPreflight.ts",
-        "frontend/src/App.tsx",
+        "backend/migration.mo",
         "backend/main.mo",
-        "project_state.json"
+        "frontend/docs/publish-to-production.md",
+        "project_state.json",
+        "frontend-file-summaries.txt"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Workshop-ledger styling/theme changes (global palette, textures, Tailwind tokens/fonts).",
-      "reason": "BuildRequest explicitly lists as a non-goal changing UI/UX beyond what is required for production promotion; these styling/theme changes are not requested by REQ-1/REQ-2.",
+      "description": "Introduced a backend migration module and wired migration execution into the backend actor.",
+      "reason": "BuildRequest explicitly forbids introducing a migration for a publish-only action and forbids code changes; adding backend/migration.mo and importing/using it in backend/main.mo are unrequested changes.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions frontend/src/index.css and frontend/tailwind.config.js changes)"
+        "backend/migration.mo",
+        "backend/main.mo"
       ]
     },
     {
-      "description": "Header/Footer content changes and attribution link updates.",
-      "reason": "Not requested by REQ-1/REQ-2 and constitutes UI/UX/content changes beyond production promotion/verification.",
+      "description": "Added a new documentation file describing a publish process.",
+      "reason": "REQ-1 requires no code or configuration changes; adding new documentation is still a repository change and was not requested as part of a promotion-only publish action.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions frontend/src/components/layout/Header.tsx and Footer.tsx)"
+        "frontend/docs/publish-to-production.md"
       ]
     },
     {
-      "description": "New/expanded empty state UI components.",
-      "reason": "Not requested; introduces/changes UI components beyond production promotion/verification.",
+      "description": "Modified frontend-related tracked summary content (indicating numerous frontend behavior/styling hooks and diagnostics features).",
+      "reason": "The request forbids modifying application features/UI/logic; the updated frontend file summary text indicates extensive app behavior/UI/styling elements, which are out of scope for publish-only promotion (even if only represented here as summary content).",
       "evidence": [
-        "frontend-file-summaries.txt (mentions frontend/src/components/ui/EmptyState.tsx and frontend/src/components/EmptyState.tsx)"
+        "frontend-file-summaries.txt"
       ]
     },
     {
-      "description": "GameDetailPage/ItemDetailPage content expansions (displaying comprehensive item info, upgrades, informational messages when crafting data unavailable).",
-      "reason": "REQ-1/REQ-2 focus on promoting a reviewed draft and verifying connectivity/navigation; these page-level feature/content changes are not explicitly requested and may be considered new functionality/UI behavior changes.",
+      "description": "Added/updated project state tracking file describing a new request in pending status.",
+      "reason": "Not requested by REQ-1; publish-only action should not require repository metadata changes.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions frontend/src/pages/GameDetailPage.tsx and frontend/src/pages/ItemDetailPage.tsx)"
+        "project_state.json"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.86,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
-    "frontend/src/hooks/useProductionPreflight.ts",
-    "frontend/src/hooks/useQueries.ts",
+    "frontend/docs/publish-to-production.md",
     "project_state.json"
   ]
 }

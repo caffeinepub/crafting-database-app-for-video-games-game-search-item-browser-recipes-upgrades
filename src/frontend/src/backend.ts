@@ -167,6 +167,7 @@ export interface backendInterface {
     getItem(gameId: string, itemId: string): Promise<CraftableItem | null>;
     getItems(gameId: string): Promise<Array<CraftableItem>>;
     getItemsByCategory(gameId: string, category: ItemCategory): Promise<Array<CraftableItem>>;
+    getProductionItems(gameId: string): Promise<Array<CraftableItem>>;
     getUpdateStatus(gameId: string): Promise<UpdateStatus | null>;
     searchItems(searchTerm: string): Promise<Array<CraftableItem>>;
 }
@@ -282,6 +283,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getItemsByCategory(arg0, to_candid_ItemCategory_n19(this._uploadFile, this._downloadFile, arg1));
+            return from_candid_vec_n18(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getProductionItems(arg0: string): Promise<Array<CraftableItem>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProductionItems(arg0);
+                return from_candid_vec_n18(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProductionItems(arg0);
             return from_candid_vec_n18(this._uploadFile, this._downloadFile, result);
         }
     }

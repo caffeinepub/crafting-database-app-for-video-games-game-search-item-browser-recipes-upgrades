@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-promote-the-currently-deployed-draft-release-draft-version-2-to-the-production-environment-so-the-production-deployment-serves-the-same-app-functionality-as-the-reviewed-draft",
-      "featureTitle": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+      "featureId": "feature-publish-promote-the-currently-deployed-draft-build-as-the-production-version-without-making-any-code-or-configuration-changes",
+      "featureTitle": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
       "files": [
-        "frontend/index.html"
+        "frontend/docs/publish-to-production.md"
       ],
       "components": [
         "http-outcalls@3.0.0",
@@ -17,27 +17,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-run-a-pre-production-verification-pass-covering-backend-canister-availability-and-frontend-api-connectivity-to-ensure-the-production-frontend-can-query-the-motoko-actor-methods-used-by-the-ui-e-g-getcataloggames-getcataloggame-getgames-getgame-getitems-getitem-getitemsbycategory-getupdatestatus",
-      "featureTitle": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useProductionPreflight.ts",
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "http-outcalls@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
       ],
       "confidence": "high"
     }

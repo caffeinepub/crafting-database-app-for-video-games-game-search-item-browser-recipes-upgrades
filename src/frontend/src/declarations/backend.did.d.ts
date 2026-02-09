@@ -78,6 +78,7 @@ export interface _SERVICE {
     [string, ItemCategory],
     Array<CraftableItem>
   >,
+  'getProductionItems' : ActorMethod<[string], Array<CraftableItem>>,
   'getUpdateStatus' : ActorMethod<[string], [] | [UpdateStatus]>,
   'searchItems' : ActorMethod<[string], Array<CraftableItem>>,
 }

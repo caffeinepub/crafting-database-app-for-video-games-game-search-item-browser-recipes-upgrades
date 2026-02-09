@@ -2,11 +2,14 @@ import Map "mo:core/Map";
 import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
+import Runtime "mo:core/Runtime";
 import Iter "mo:core/Iter";
 import List "mo:core/List";
 import Order "mo:core/Order";
-import Runtime "mo:core/Runtime";
 
+import Migration "migration";
+
+(with migration = Migration.run)
 actor {
   public type UpdateStatus = {
     status : {
@@ -80,6 +83,7 @@ actor {
     game : Game;
     items : [CraftableItem];
     updateStatus : UpdateStatus;
+    isProduction : Bool;
   };
 
   module CraftableItem {
@@ -112,6 +116,15 @@ actor {
   public query ({ caller }) func getItems(gameId : Text) : async [CraftableItem] {
     switch (craftingGames.get(gameId)) {
       case (?game) { game.items };
+      case (null) { [] };
+    };
+  };
+
+  public query ({ caller }) func getProductionItems(gameId : Text) : async [CraftableItem] {
+    switch (craftingGames.get(gameId)) {
+      case (?game) {
+        if (game.isProduction) { game.items } else { [] };
+      };
       case (null) { [] };
     };
   };

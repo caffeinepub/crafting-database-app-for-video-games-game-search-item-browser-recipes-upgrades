@@ -1,8 +1,8 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup and production preflight hook integrated into the Layout component for backend connectivity verification on app initialization.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including routes for game search, game details, item details, and diagnostics, with production preflight hook and deep-link restoration logic integrated into the Layout component.",
   "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations with defensive error handling that returns empty arrays/null values instead of throwing exceptions, ensuring production navigation remains stable.",
   "frontend/src/components/layout/Header.tsx": "Sticky header component displaying the app logo, title, and home navigation button with workshop-ledger styling.",
-  "frontend/src/components/layout/Footer.tsx": "Footer component with copyright notice and caffeine.ai attribution link with heart icon.",
+  "frontend/src/components/layout/Footer.tsx": "Footer component with copyright notice, caffeine.ai attribution link with heart icon, and a small diagnostics link for accessing system diagnostics.",
   "frontend/src/components/ui/EmptyState.tsx": "Reusable empty state component for displaying \"no results\" messages with customizable title, description, and icon.",
   "frontend/src/pages/GameSearchPage.tsx": "Landing page displaying the video game library from catalog games with search functionality and navigation to game details.",
   "frontend/src/pages/GameDetailPage.tsx": "Game detail page showing catalog game info with graceful handling when crafting data is unavailable, displaying an informational message and only showing items/categories when crafting data exists.",
@@ -10,7 +10,12 @@
   "frontend/src/index.css": "Global styles with warm workshop-ledger color palette using OKLCH colors, featuring paper-like surfaces, sepia/brown tones, and subtle ruled-line texture effect.",
   "frontend/tailwind.config.js": "Tailwind configuration extended with custom fonts (Inter, Merriweather, JetBrains Mono), paper shadow utility, and workshop-themed design tokens.",
   "frontend/src/components/EmptyState.tsx": "Reusable empty state component for displaying \"no results\" messages with customizable title, description, and icon.",
-  "frontend/src/hooks/useProductionPreflight.ts": "Production preflight hook that performs non-blocking backend connectivity checks on initial app load, testing all actor methods and logging structured diagnostics without affecting UX.",
+  "frontend/src/hooks/useProductionPreflight.ts": "Production preflight hook with hardened connectivity checks that validate result types (arrays/null/objects) to avoid false-negative failures when backend methods return expected empty results for non-existent test IDs.",
   "frontend/src/hooks/useActor.ts": "Hardened actor initialization hook with enhanced error handling, retry logic, and fallback to anonymous actor to prevent uncaught exceptions during production network issues.",
-  "frontend/index.html": "HTML entry point with production-friendly title \"Crafting Compendium - Video Game Crafting Database\" without draft-only messaging."
+  "frontend/index.html": "HTML entry point with production-ready deep-link restoration script that safely handles sessionStorage operations and passes the restored path to the React router for navigation after initialization.",
+  "frontend/src/state/preflightDiagnosticsStore.ts": "Zustand store managing preflight connectivity check state including status (idle/running/complete/skipped), timestamp, actor availability, and per-method results with pass/fail status and error messages.",
+  "frontend/src/lib/diagnostics/collectFrontendDiagnostics.ts": "Helper functions to collect comprehensive frontend runtime diagnostics including build metadata (version, timestamp, git commit from import.meta.env), environment details, network status, and preflight results for display and clipboard export.",
+  "frontend/src/pages/DiagnosticsPage.tsx": "Diagnostics page displaying runtime environment details including optional build version/timestamp/git commit metadata, backend connectivity preflight results with per-method status, and a hardened copy-to-clipboard action with graceful fallback.",
+  "frontend/public/404.html": "SPA-friendly 404 fallback page with robust error handling that captures the full requested path (pathname + search + hash) in sessionStorage and redirects to root, enabling deep-linking for client-side routes in production static hosting.",
+  "frontend/docs/publish-to-production.md": "Comprehensive runbook documenting the publish-only promotion process, including pre-publish verification checklist, smoke testing steps, explicit notes on what publishing does and does not do (no rebuilds, migrations, or code changes), and post-publish monitoring guidance."
 }

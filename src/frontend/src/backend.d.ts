@@ -85,6 +85,7 @@ export interface backendInterface {
     getItem(gameId: string, itemId: string): Promise<CraftableItem | null>;
     getItems(gameId: string): Promise<Array<CraftableItem>>;
     getItemsByCategory(gameId: string, category: ItemCategory): Promise<Array<CraftableItem>>;
+    getProductionItems(gameId: string): Promise<Array<CraftableItem>>;
     getUpdateStatus(gameId: string): Promise<UpdateStatus | null>;
     searchItems(searchTerm: string): Promise<Array<CraftableItem>>;
 }

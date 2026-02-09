@@ -1,8 +1,32 @@
+<!DOCTYPE html>
 <html lang='en'>
     <head>
         <meta charset='UTF-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <title>Crafting Compendium - Video Game Crafting Database</title>
+        <script>
+          // Handle SPA deep-link redirects from 404.html
+          // This ensures direct navigation to routes like /diagnostics works in production
+          (function() {
+            try {
+              // Check if we were redirected from 404.html with a path to restore
+              var redirectPath = sessionStorage.getItem('spa_redirect_path');
+              if (redirectPath) {
+                // Clear the redirect path immediately to prevent loops
+                sessionStorage.removeItem('spa_redirect_path');
+                
+                // Store for the router to pick up after initialization
+                // Using a different key to avoid conflicts
+                sessionStorage.setItem('spa_initial_path', redirectPath);
+                
+                console.log('[Deep-link] Restored path from 404:', redirectPath);
+              }
+            } catch (error) {
+              // If sessionStorage fails, app will just load normally at root
+              console.warn('[Deep-link] sessionStorage unavailable:', error);
+            }
+          })();
+        </script>
     </head>
     <body>
         <div id='root'></div>

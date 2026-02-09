@@ -1,58 +1,40 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T23:37:34.135Z",
+  "generatedAt": "2026-02-09T00:12:24.943Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+        "summary": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/app-logo.dim_512x512.png",
-          "frontend/public/assets/generated/hero-banner.dim_1600x900.png",
-          "frontend/src/components/layout/Header.tsx",
-          "frontend/src/pages/GameSearchPage.tsx",
-          "frontend/index.html"
+          "frontend/docs/publish-to-production.md"
         ],
         "matchedFiles": [
-          "frontend/index.html"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useProductionPreflight.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useActor.ts",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useProductionPreflight.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/docs/publish-to-production.md"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
-    "frontend/src/hooks/useProductionPreflight.ts",
-    "frontend/src/hooks/useQueries.ts",
+    "frontend/docs/publish-to-production.md",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

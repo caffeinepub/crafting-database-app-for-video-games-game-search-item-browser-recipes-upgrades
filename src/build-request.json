@@ -1,55 +1,48 @@
 {
   "kind": "build_request",
-  "title": "Promote the currently deployed draft to production",
+  "title": "Publish the current draft to production",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+      "text": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
       "target": "unknown",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "Proceed to production"
+          "Publish with the current draft"
         ]
       },
       "acceptanceCriteria": [
-        "A production deployment is created from the current draft (Draft Version 2).",
-        "The production app loads successfully and core flows work: game search/list, game detail, item detail pages render without runtime errors.",
-        "Production deployment does not show draft-only messaging or review-only banners (if any exist)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Proceed to production"
-        ]
-      },
-      "acceptanceCriteria": [
-        "From the production frontend, queries for catalog games and crafting games return successfully (or return empty lists without errors if no data exists).",
-        "Navigating between routes '/', '/game/$gameId', and '/game/$gameId/item/$itemId' works in production without broken links or blank screens.",
-        "No uncaught exceptions occur in the browser console during basic navigation and data loading."
+        "The production deployment completes successfully using the exact same artifact as the current draft (no new build changes).",
+        "After publishing, the production URL/canister serves the same UI/behavior as the draft that was approved.",
+        "No backend schema/state migrations are introduced as part of publishing."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui or other paths listed as immutable in SYSTEM_CONTEXT.",
-    "Keep all Motoko logic within the single main actor (backend/main.mo); do not introduce additional backend services."
+    "Do not modify application features, UI, backend logic, or data models as part of this request (publish-only).",
+    "Do not introduce a migration (backend/migration.mo) for a publish-only action."
   ],
   "nonGoals": [
-    "Adding new app features or changing the existing UI/UX beyond what is required for a production promotion.",
-    "Changing backend data schemas or adding migrations unless required to complete the production promotion."
+    "Adding new features or changing existing functionality before publishing.",
+    "Refactoring frontend or backend code.",
+    "Changing styling/theme as part of the publish step."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

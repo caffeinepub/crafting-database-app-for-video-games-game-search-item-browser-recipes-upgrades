@@ -1,45 +1,22 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project focused on deploying an app through draft and production release stages.",
-  "architectural_notes": [
-    "Establish a release workflow with at least two environments/stages: Draft (review) and Production (live)."
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-promote-the-currently-deployed-draft-release-draft-version-2-to-the-production-environment-so-the-production-deployment-serves-the-same-app-functionality-as-the-reviewed-draft",
-      "title": "Promote the currently deployed draft release (Draft Version 2) to the production environment so the production deployment serves the same app functionality as the reviewed draft.",
+      "id": "feature-publish-promote-the-currently-deployed-draft-build-as-the-production-version-without-making-any-code-or-configuration-changes",
+      "title": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-run-a-pre-production-verification-pass-covering-backend-canister-availability-and-frontend-api-connectivity-to-ensure-the-production-frontend-can-query-the-motoko-actor-methods-used-by-the-ui-e-g-getcataloggames-getcataloggame-getgames-getgame-getitems-getitem-getitemsbycategory-getupdatestatus",
-      "title": "Run a pre-production verification pass covering backend canister availability and frontend API connectivity to ensure the production frontend can query the Motoko actor methods used by the UI (e.g., getCatalogGames, getCatalogGame, getGames, getGame, getItems, getItem, getItemsByCategory, getUpdateStatus).",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Support deploying a draft build/version for review",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Support promoting/deploying the reviewed draft to production",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "projectName": "Promote the currently deployed draft to production",
+  "new_feature_requests": [],
+  "projectName": "Publish the current draft to production",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

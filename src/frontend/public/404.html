@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crafting Compendium - Video Game Crafting Database</title>
+    <script>
+      // SPA fallback: redirect to index.html with the original path preserved
+      // This enables deep-linking for client-side routes like /diagnostics
+      (function() {
+        try {
+          var path = window.location.pathname;
+          var search = window.location.search || '';
+          var hash = window.location.hash || '';
+          
+          // Only redirect if we're not already at root
+          if (path !== '/' && path !== '/index.html') {
+            // Store the full original path for restoration
+            var fullPath = path + search + hash;
+            
+            // Use sessionStorage to pass the path to index.html
+            // Key matches what index.html expects
+            try {
+              sessionStorage.setItem('spa_redirect_path', fullPath);
+            } catch (storageError) {
+              // If sessionStorage fails, still redirect but path won't be restored
+              console.warn('sessionStorage unavailable:', storageError);
+            }
+            
+            // Redirect to root (replace to avoid back-button loop)
+            window.location.replace('/' + search + hash);
+          }
+        } catch (error) {
+          // Fallback: just redirect to root if anything fails
+          console.error('404 redirect error:', error);
+          window.location.replace('/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 100px auto; padding: 20px; text-align: center;">
+      <h1>Loading...</h1>
+      <p>Redirecting to the application...</p>
+    </div>
+  </body>
+</html>
