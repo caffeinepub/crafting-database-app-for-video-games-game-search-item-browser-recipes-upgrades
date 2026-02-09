@@ -1,40 +1,21 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T00:12:24.943Z",
+  "generatedAt": "2026-02-09T00:21:56.243Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
-    "items": [
-      {
-        "id": "REQ-1",
-        "summary": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/docs/publish-to-production.md"
-        ],
-        "matchedFiles": [
-          "frontend/docs/publish-to-production.md"
-        ]
-      }
-    ]
+    "total": 0,
+    "implemented": 0,
+    "items": []
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/docs/publish-to-production.md",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

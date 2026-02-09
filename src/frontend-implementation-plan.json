@@ -1,23 +1,6 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Promote currently deployed draft build to production (publish-only)",
-  "requirements": [
-    {
-      "id": "REQ-1",
-      "summary": "Document and execute a publish-only promotion of the currently deployed draft artifact to production without rebuilding or changing the app.",
-      "acceptanceCriteria": [
-        "The production deployment completes successfully using the exact same artifact as the current draft (no new build changes).",
-        "After publishing, the production URL/canister serves the same UI/behavior as the draft that was approved.",
-        "No backend schema/state migrations are introduced as part of publishing."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/docs/publish-to-production.md",
-          "operation": "create",
-          "description": "Add a publish-only runbook describing how to promote the already-built draft artifact to production (no rebuild, no code/config changes), including verification steps (URL checks, key user flows) and explicit notes to avoid introducing migrations or any app changes during the publish action."
-        }
-      ]
-    }
-  ]
+  "title": "Retry publishing the current draft build to production (promotion-only)",
+  "requirements": []
 }

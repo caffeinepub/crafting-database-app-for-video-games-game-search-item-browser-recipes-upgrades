@@ -1,35 +1,15 @@
 {
   "kind": "build_request",
-  "title": "Publish the current draft to production",
+  "title": "Retry publishing the current draft build to production",
   "priority": "normal",
-  "requirements": [
-    {
-      "id": "REQ-1",
-      "text": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
-      "target": "unknown",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Publish with the current draft"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The production deployment completes successfully using the exact same artifact as the current draft (no new build changes).",
-        "After publishing, the production URL/canister serves the same UI/behavior as the draft that was approved.",
-        "No backend schema/state migrations are introduced as part of publishing."
-      ]
-    }
-  ],
+  "requirements": [],
   "constraints": [
-    "Do not modify application features, UI, backend logic, or data models as part of this request (publish-only).",
-    "Do not introduce a migration (backend/migration.mo) for a publish-only action."
+    "Publishing must be a promotion-only operation: promote the currently deployed draft artifact to production without rebuilding, modifying code, changing configuration, or performing migrations.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Adding new features or changing existing functionality before publishing.",
-    "Refactoring frontend or backend code.",
-    "Changing styling/theme as part of the publish step."
+    "Implementing new application features unrelated to publishing/promoting the draft build to production.",
+    "Changing frontend or backend application logic as part of the publish step."
   ],
   "imageRequirements": {
     "required": [],

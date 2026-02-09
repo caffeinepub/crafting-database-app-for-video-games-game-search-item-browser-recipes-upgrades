@@ -1,10 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Publish (promote) the currently deployed draft build to production without any code or configuration changes.
+**Goal:** Retry publishing by promoting the currently deployed draft artifact to production.
 
 **Planned changes:**
-- Promote the existing draft deployment artifact to production (publish-only; no rebuild).
-- Verify production serves the same UI/behavior as the approved draft after publishing.
+- Re-run the production publish step as a promotion-only operation (no rebuilds, code/config changes, or migrations).
+- Ensure any user-facing publish/status messaging is in English.
 
-**User-visible outcome:** The production URL/canister serves the exact same experience as the currently approved draft.
+**User-visible outcome:** The existing draft build is promoted and published to the production environment without any application changes.

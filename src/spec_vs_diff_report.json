@@ -1,59 +1,28 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T00:12:24.941Z",
-  "summary": "The diff introduces multiple code and documentation changes (including a new backend migration and modifications to backend/main.mo), which violates the publish-only requirement to promote the existing draft artifact to production with no code/config changes and no migrations.",
-  "missing_requirements": [
-    {
-      "id": "REQ-1",
-      "requirement": "Publish (promote) the currently deployed draft build as the production version, without making any code or configuration changes.",
-      "reason": "The diff contains new and modified source files, so the production deployment would not be using the exact same draft artifact. Additionally, a backend migration file was added, which explicitly violates the publish-only/migration prohibition.",
-      "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo",
-        "frontend/docs/publish-to-production.md",
-        "project_state.json",
-        "frontend-file-summaries.txt"
-      ]
-    }
-  ],
+  "generatedAt": "2026-02-09T00:21:56.241Z",
+  "summary": "The BuildRequest specifies a promotion-only publish retry with no code/config changes, but the diff includes substantial backend application code changes unrelated to publishing/promotion and a project state metadata update.",
+  "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Introduced a backend migration module and wired migration execution into the backend actor.",
-      "reason": "BuildRequest explicitly forbids introducing a migration for a publish-only action and forbids code changes; adding backend/migration.mo and importing/using it in backend/main.mo are unrequested changes.",
+      "description": "Introduced/modified backend application logic for game/crafting catalog types and query APIs (e.g., CraftableItem, Game, getGames/getItems/searchItems/getProductionItems, production flag).",
+      "reason": "The BuildRequest has no feature requirements and explicitly constrains the change to a promotion-only publish operation without rebuilding or modifying code; these backend logic changes are unrelated to a publish/promotion retry.",
       "evidence": [
-        "backend/migration.mo",
         "backend/main.mo"
       ]
     },
     {
-      "description": "Added a new documentation file describing a publish process.",
-      "reason": "REQ-1 requires no code or configuration changes; adding new documentation is still a repository change and was not requested as part of a promotion-only publish action.",
-      "evidence": [
-        "frontend/docs/publish-to-production.md"
-      ]
-    },
-    {
-      "description": "Modified frontend-related tracked summary content (indicating numerous frontend behavior/styling hooks and diagnostics features).",
-      "reason": "The request forbids modifying application features/UI/logic; the updated frontend file summary text indicates extensive app behavior/UI/styling elements, which are out of scope for publish-only promotion (even if only represented here as summary content).",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Added/updated project state tracking file describing a new request in pending status.",
-      "reason": "Not requested by REQ-1; publish-only action should not require repository metadata changes.",
+      "description": "Updated project metadata/state file (project name/state version) not related to promotion-only publishing.",
+      "reason": "No request was made to change project metadata; the task is solely to retry promoting the existing draft artifact to production without code/config changes.",
       "evidence": [
         "project_state.json"
       ]
     }
   ],
-  "confidence": 0.86,
+  "confidence": 0.74,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
-    "frontend-file-summaries.txt",
-    "frontend/docs/publish-to-production.md",
     "project_state.json"
   ]
 }
